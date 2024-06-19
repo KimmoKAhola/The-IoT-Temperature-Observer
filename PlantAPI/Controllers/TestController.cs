@@ -13,8 +13,8 @@ namespace PlantAPI.Controllers;
 [Route("[controller]")]
 public class TestController(PlantContext context, IConfiguration configuration) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> Get()
+    [HttpGet("Temperature")]
+    public async Task<IActionResult> GetTemperature()
     {
         try
         {
@@ -55,6 +55,61 @@ public class TestController(PlantContext context, IConfiguration configuration) 
         {
             Console.WriteLine(e);
             // return StatusCode(500, "Error");
+        }
+
+        return StatusCode(401, "Unauthorized");
+    }
+
+    [HttpGet("User")]
+    public async Task<IActionResult> GetUsers()
+    {
+        try
+        {
+            var res = await context.Users.ToListAsync();
+            return Ok(res);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return BadRequest();
+    }
+    
+    [HttpPost("User")]
+    public async Task<IActionResult> Put(User user)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        try
+        {
+            var database = await context.Users.ToListAsync();
+            if (database.Any(u => u.UserChatId == user.UserChatId))
+            {
+                var u = database.Find(u => u.UserChatId == user.UserChatId);
+                u.NumberOfMessagesSent += 1;
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+            else
+            {
+                var newUser = new User
+                {
+                    FirstName = user.FirstName,
+                    UserChatId = user.UserChatId,
+                    NumberOfMessagesSent = 0
+                };
+                await context.AddAsync(newUser);
+                await context.SaveChangesAsync();
+                return Ok();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
 
         return StatusCode(401, "Unauthorized");

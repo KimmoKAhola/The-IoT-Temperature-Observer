@@ -136,15 +136,18 @@ def get_telegram_updates(offset=None):
     except Exception as e:
         print(f"Exception in get_telegram_updates: {e}")
         return []
+    finally:
+        if response:
+            response.close()
 
 def set_blue():
     red_pwm = PWM(Pin(18))
     blue_pwm = PWM(Pin(17))
     green_pwm = PWM(Pin(16))
-    
-    red_pwm.duty_u16(LOWER_BOUND_8_BIT)
-    green_pwm.duty_u16(LOWER_BOUND_8_BIT)
-    blue_pwm.duty_u16(UPPER_BOUND_16_BIT)
+
+    red_pwm.duty_u16(50000)
+    green_pwm.duty_u16(50000)
+    blue_pwm.duty_u16(50000)
     
 def set_green():
     red_pwm = PWM(Pin(18))
@@ -173,14 +176,44 @@ def set_white():
     green_pwm.duty_u16(UPPER_BOUND_16_BIT)
     blue_pwm.duty_u16(UPPER_BOUND_16_BIT)
     pass
-    
+
+def add_user_to_database(name, chat_id):
+    url = f'https://plantobserverapi.azurewebsites.net/Test/User'
+    headers = {
+        'Content-Type' : "aplication/json"
+    }
+    data = {
+        'firstName' : name,
+        'userChatId' : chat_id
+    }
+    response = None
+    try:
+        response = requests.post(url=url, headers=headers, json=data)
+        if response.status_code == 200:
+            print("ok")
+        else:
+            print(f"Failed to get updates: {response.status_code}")
+    except Exception as e:
+        print(e)
+    finally:
+        if response:
+            response.close()
 
 def process_telegram_messages(updates):
+    print("Crash?")
+    processed_messages = []
     for update in updates:
         message = update.get('message', {})
         text = message.get('text', '')
         chat_id = message.get('chat', {}).get('id', '')
-        
+
+        if chat_id in processed_messages:
+            send_message(chat_id, "You have spammed too much, please calm down. Your messages have been ignored.")
+            continue
+
+        processed_messages.append(chat_id)
+        #add_user_to_database("test", chat_id)
+
         if text.startswith('/temperature'):
             try:
                 value = read_temperature(temperature_mode)
@@ -190,6 +223,7 @@ def process_telegram_messages(updates):
         elif text.startswith('/blue'):
             try:
                 set_blue()
+                send_message(chat_id, "blue")
             except Exception as e:
                 print(e)
         elif text.startswith('/red'):
@@ -232,13 +266,18 @@ def process_telegram_messages(updates):
                 if not (LOWER_BOUND_8_BIT <= r <= UPPER_BOUND_8_BIT and LOWER_BOUND_8_BIT <= g <= UPPER_BOUND_8_BIT and LOWER_BOUND_8_BIT <= b <= UPPER_BOUND_8_BIT):
                     raise ValueError("RGB values must be between 0 and 255")
                 
+                red_pwm = PWM(Pin(RED_PIN))
+                blue_pwm = PWM(Pin(BLUE_PIN))
+                green_pwm = PWM(Pin(GREEN_PIN))
+
+                print(red_pwm, blue_pwm, green_pwm)
                 red_u16 = int(r / UPPER_BOUND_8_BIT * UPPER_BOUND_16_BIT)
                 green_u16 = int(g / UPPER_BOUND_8_BIT * UPPER_BOUND_16_BIT)
                 blue_u16 = int(b / UPPER_BOUND_8_BIT * UPPER_BOUND_16_BIT)
                 
-                red_pwm.duty_u16(red_u16)
-                green_pwm.duty_u16(green_u16)
-                blue_pwm.duty_u16(blue_u16)
+                red_pwm.duty_u16(50000)
+                green_pwm.duty_u16(50000)
+                blue_pwm.duty_u16(50000)
                 
                 send_message(chat_id, f"Set RGB color to R:{r}, G:{g}, B:{b}")
 
@@ -300,7 +339,6 @@ def send_message(chat_id, text):
 
 def get_token():
     url = f'https://plantobserverapi.azurewebsites.net/Test/token?user={USERNAME}&password={PASSWORD}'
-    #url = f'https://plantobserverapi.azurewebsites.net/Test/token'
     headers = {
         "Accept": 'text/plain'
     }
@@ -316,6 +354,9 @@ def get_token():
             print(response.status_code)
     except Exception as e:
         print(e)
+    finally:
+        if response:
+            response.close()
 
 def send_to_api(token, temperature):
     url = f'https://plantobserverapi.azurewebsites.net/Test/post'
@@ -334,24 +375,25 @@ def send_to_api(token, temperature):
             print(req.status_code)
     except Exception as e:
         print(e)
+    finally:
+        if req:
+            req.close()
 
 connect()
 
 last_update_id = None
 
 while True:
-    toggle_led()
     token = get_token()
     value = read_temperature(temperature_mode)
     send_to_api(token, value)
-    sleep(10)
-    #returnValue = sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
-    #sleep(DELAY)
-    #try:
-    #    updates = get_telegram_updates(offset=last_update_id)
-    #    if updates:
-    #        process_telegram_messages(updates)
-    #        last_update_id = updates[-1]['update_id'] + 1
-    #except Exception as e:
-    #    print(f"Error in main loop: {e}")
+    returnValue = sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
+    try:
+        updates = get_telegram_updates(offset=last_update_id)
+        if updates:
+            process_telegram_messages(updates)
+            last_update_id = updates[-1]['update_id'] + 1
+    except Exception as e:
+        print(f"Error in main loop: {e}")
+    sleep(DELAY)
 

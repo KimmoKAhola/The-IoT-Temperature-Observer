@@ -10,4 +10,5 @@ public class PlantContext : DbContext
     }
     
     public DbSet<Test> Test { get; set; } 
+    public DbSet<User> Users { get; set; } 
 }
