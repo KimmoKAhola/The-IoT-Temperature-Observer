@@ -12,5 +12,5 @@ public record User
     
     [JsonIgnore]
     public int NumberOfMessagesSent { get; set; }
-    public int UserChatId { get; set; }
+    public string UserChatId { get; set; }
 }

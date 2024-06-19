@@ -9,8 +9,6 @@ import json
 
 led = Pin("LED", Pin.OUT)
 
-
-
 def read_env_file(file_path):
     env_vars = {}
     with open(file_path) as f:
@@ -52,29 +50,17 @@ red_pwm = PWM(Pin(RED_PIN))
 blue_pwm = PWM(Pin(BLUE_PIN))
 green_pwm = PWM(Pin(GREEN_PIN))
 
-print(f"TOKEN: {TOKEN}")
-print(f"DEVICE_LABEL: {DEVICE_LABEL}")
-print(f"VARIABLE_LABEL: {VARIABLE_LABEL}")
-print(f"WIFI_SSID: {WIFI_SSID}")
-print(f"WIFI_PASS: {WIFI_PASS}")
-print(f"DELAY: {DELAY}")
-
 adc = machine.ADC(TEMP_PIN)
 sf = 4095/65535 # Scale factor
 volt_per_adc = (3.3 / 4095)
 
 def read_temperature(temperature_mode): 
     millivolts = adc.read_u16()
-
     adc_12b = millivolts * sf
-
     volt = adc_12b * volt_per_adc
-
     dx = abs(50 - 0)
     dy = abs(0 - 0.5)
-
     shift = volt - 0.5
-
     temp = shift / (dy / dx)
     if temperature_mode == "C":
         return round(temp, DECIMAL_PRECISION)
@@ -140,59 +126,22 @@ def get_telegram_updates(offset=None):
         if response:
             response.close()
 
-def set_blue():
-    red_pwm = PWM(Pin(18))
-    blue_pwm = PWM(Pin(17))
-    green_pwm = PWM(Pin(16))
-
-    red_pwm.duty_u16(50000)
-    green_pwm.duty_u16(50000)
-    blue_pwm.duty_u16(50000)
-    
-def set_green():
-    red_pwm = PWM(Pin(18))
-    blue_pwm = PWM(Pin(17))
-    green_pwm = PWM(Pin(16))
-    
-    red_pwm.duty_u16(LOWER_BOUND_8_BIT)
-    green_pwm.duty_u16(UPPER_BOUND_16_BIT)
-    blue_pwm.duty_u16(LOWER_BOUND_8_BIT)
-    
-def set_red():
-    red_pwm = PWM(Pin(18))
-    blue_pwm = PWM(Pin(17))
-    green_pwm = PWM(Pin(16))
-    
-    red_pwm.duty_u16(UPPER_BOUND_16_BIT)
-    green_pwm.duty_u16(LOWER_BOUND_8_BIT)
-    blue_pwm.duty_u16(LOWER_BOUND_8_BIT)
-
-def set_white():
-    red_pwm = PWM(Pin(18))
-    blue_pwm = PWM(Pin(17))
-    green_pwm = PWM(Pin(16))
-    
-    red_pwm.duty_u16(UPPER_BOUND_16_BIT)
-    green_pwm.duty_u16(UPPER_BOUND_16_BIT)
-    blue_pwm.duty_u16(UPPER_BOUND_16_BIT)
-    pass
-
 def add_user_to_database(name, chat_id):
     url = f'https://plantobserverapi.azurewebsites.net/Test/User'
     headers = {
-        'Content-Type' : "aplication/json"
+        'Content-Type' : "application/json"
     }
     data = {
         'firstName' : name,
         'userChatId' : chat_id
     }
-    response = None
+    print(data)
     try:
         response = requests.post(url=url, headers=headers, json=data)
         if response.status_code == 200:
             print("ok")
         else:
-            print(f"Failed to get updates: {response.status_code}")
+            print(f"{response.status_code}")
     except Exception as e:
         print(e)
     finally:
@@ -212,7 +161,7 @@ def process_telegram_messages(updates):
             continue
 
         processed_messages.append(chat_id)
-        #add_user_to_database("test", chat_id)
+        add_user_to_database("test", chat_id)
 
         if text.startswith('/temperature'):
             try:
@@ -220,27 +169,7 @@ def process_telegram_messages(updates):
                 send_message(chat_id, f"Current temperature in Kimmo's room: {value} degrees {temperature_mode}")
             except Exception as e:
                 print(f"Error reading temperature: {e}")
-        elif text.startswith('/blue'):
-            try:
-                set_blue()
-                send_message(chat_id, "blue")
-            except Exception as e:
-                print(e)
-        elif text.startswith('/red'):
-            try:
-                set_red()
-            except Exception as e:
-                print(e)
-        elif text.startswith('/green'):
-            try:
-                set_green()
-            except Exception as e:
-                print(e)
-        elif text.startswith('/white'):
-            try:
-                set_white()
-            except Exception as e:
-                print(e)
+        
         elif text.startswith('/toggle_led'):
             try:
                 toggle_led()
@@ -258,37 +187,7 @@ def process_telegram_messages(updates):
                 send_message(chat_id, f"The temperature mode has been set to: {temperature_mode}")
             except Exception as e:
                 print(f"{e}")
-        elif text.startswith('/rgb'):
-            try:
-                rgb_str = text.split('(')[1].split(')')[0]
-                r, g, b = map(int, rgb_str.split(','))
-                
-                if not (LOWER_BOUND_8_BIT <= r <= UPPER_BOUND_8_BIT and LOWER_BOUND_8_BIT <= g <= UPPER_BOUND_8_BIT and LOWER_BOUND_8_BIT <= b <= UPPER_BOUND_8_BIT):
-                    raise ValueError("RGB values must be between 0 and 255")
-                
-                red_pwm = PWM(Pin(RED_PIN))
-                blue_pwm = PWM(Pin(BLUE_PIN))
-                green_pwm = PWM(Pin(GREEN_PIN))
-
-                print(red_pwm, blue_pwm, green_pwm)
-                red_u16 = int(r / UPPER_BOUND_8_BIT * UPPER_BOUND_16_BIT)
-                green_u16 = int(g / UPPER_BOUND_8_BIT * UPPER_BOUND_16_BIT)
-                blue_u16 = int(b / UPPER_BOUND_8_BIT * UPPER_BOUND_16_BIT)
-                
-                red_pwm.duty_u16(50000)
-                green_pwm.duty_u16(50000)
-                blue_pwm.duty_u16(50000)
-                
-                send_message(chat_id, f"Set RGB color to R:{r}, G:{g}, B:{b}")
-
-            except ValueError as ve:
-                print(f"Value error: {ve}")
-                send_message(chat_id, "Horunge. Each value must be between 0 and 255.")
-
-            except Exception as e:
-                print(f"Error handling /rgb command: {e}")
-                send_message(chat_id, "Error handling /rgb command")
-
+        
         elif text.startswith('/masoud'):
             try:
                 send_message(chat_id, "MASOUD")
