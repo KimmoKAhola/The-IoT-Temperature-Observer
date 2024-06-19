@@ -1,0 +1,9 @@
+.env
+*.txt
+*.png
+/PlantAPI/appsettings.json
+/PlantAPI/appsettings.Development.json
+/PlantAPI/Properties/launchSettings.json
+/.idea/
+appsettings.json
+*.json
