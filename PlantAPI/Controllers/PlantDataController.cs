@@ -77,7 +77,7 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
     }
 
     [HttpPost("PostMessage")]
-    [ApiExplorerSettings(IgnoreApi = true)]
+    // [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     public async Task<IActionResult> Put([FromBody] MessageDTO userMessage)
     {

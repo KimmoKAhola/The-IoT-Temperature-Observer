@@ -1,12 +1,12 @@
-import machine
 import time
 from machine import Pin, PWM
-import network
 import urequests as requests
 from time import sleep
 import json
 from boot import Boot
 from configuration import Configuration as variables
+from temperature_sensor import TemperatureSensor
+from save_data import SaveData
 
 led = Pin("LED", Pin.OUT)
 
@@ -39,45 +39,8 @@ red_pwm = PWM(Pin(RED_PIN))
 blue_pwm = PWM(Pin(BLUE_PIN))
 green_pwm = PWM(Pin(GREEN_PIN))
 
-adc = machine.ADC(TEMP_PIN)
-sf = 4095/65535
-volt_per_adc = (3.3 / 4095)
-
-# Read temperature in C
-def read_temperature(): 
-    millivolts = adc.read_u16()
-    adc_12b = millivolts * sf
-    volt = adc_12b * volt_per_adc
-    dx = abs(50 - 0)
-    dy = abs(0 - 0.5)
-    shift = volt - 0.5
-    temp = shift / (dy / dx)
-    return round(temp, DECIMAL_PRECISION)
-
-# Builds the json to send the request
-def build_json(variable, value):
-    try:
-        data = {variable: {"value": value}}
-        return data
-    except:
-        return None
-
-# Sending data to Ubidots Restful Webserice
-def sendData(device, variable, value):
-    try:
-        url = "https://industrial.api.ubidots.com/"
-        url = url + "api/v1.6/devices/" + device
-        headers = {"X-Auth-Token": TOKEN, "Content-Type": "application/json"}
-        data = build_json(variable, value)
-
-        if data is not None:
-            print(data)
-            req = requests.post(url=url, headers=headers, json=data)
-            return req.json()
-        else:
-            pass
-    except:
-        pass
+temp_sensor = TemperatureSensor(TEMP_PIN)
+save = SaveData(TOKEN)
 
 def get_telegram_updates(offset=None):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
@@ -147,7 +110,7 @@ def process_telegram_messages(updates, token):
 
         if text.startswith('/temperature'):
             try:
-                value = read_temperature()
+                value = temp_sensor.read_temperature()
                 send_message(chat_id, f"Current temperature in Kimmo's room: {value} degrees C")
             except Exception as e:
                 print(f"Error reading temperature: {e}")
@@ -170,7 +133,7 @@ def process_telegram_messages(updates, token):
                 print(f"Error with masoud: {e}")
         elif text.startswith('/help'):
             try:
-                send_message(chat_id, "Help")
+                send_message(chat_id, "help")
             except Exception as e:
                 print(f"{e}")
         else:
@@ -185,7 +148,7 @@ def toggle_led():
     try:
         led_status = not led.value()
         led.value(led_status)
-        sendData(DEVICE_LABEL, LED_LABEL, int(led_status))
+        save.sendData(DEVICE_LABEL, LED_LABEL, int(led_status))
 
     except Exception as e:
         print(f"Error toggling LED: {e}")
@@ -203,47 +166,6 @@ def send_message(chat_id, text):
     req = requests.post(url=url, headers=headers, json=payload)
     req.close()
 
-def get_token():
-    url = f'https://plantobserverapi.azurewebsites.net/PlantData/token?user={USERNAME}&password={PASSWORD}'
-    headers = {
-        "Accept": 'text/plain'
-    }
-    params = {
-        'user' : USERNAME,
-        'password' : PASSWORD
-    }
-    try:
-        response = requests.post(url, headers=headers, json=params)
-        if response.status_code == 200:
-            return response.text
-        else:
-            print(response.status_code)
-    except Exception as e:
-        print(e)
-    finally:
-        if response:
-            response.close()
-
-def send_to_api(token, temperature):
-    url = f'https://plantobserverapi.azurewebsites.net/PlantData/post'
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {token}'
-    }
-    data = {
-        "temperature" : temperature
-    }
-    try:
-        req = requests.post(url, headers=headers, json=data)
-        if req.status_code == 200:
-            print("Post successful")
-        else:
-            print(req.status_code)
-    except Exception as e:
-        print(e)
-    finally:
-        if req:
-            req.close()
 
 Boot.connect(WIFI_SSID, WIFI_PASS)
 
@@ -251,14 +173,11 @@ last_update_id = None
 current_time = time.time()
 
 while True:
-    token = get_token()
-    value = read_temperature()
-    """
-    if value > 25:
-        send_message(792140634, "VARNING!! VARMT!!")
-    """
-    send_to_api(token, value)
-    returnValue = sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
+    token = save.get_token(USERNAME, PASSWORD)
+    value = temp_sensor.read_temperature()
+
+    save.send_to_api(token, value)
+    save.sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
     try:
         updates = get_telegram_updates(offset=last_update_id)
         if updates:
