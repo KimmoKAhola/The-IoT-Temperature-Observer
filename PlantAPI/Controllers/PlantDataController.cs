@@ -77,7 +77,7 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
     }
 
     [HttpPost("PostMessage")]
-    // [ApiExplorerSettings(IgnoreApi = true)]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     public async Task<IActionResult> Put([FromBody] MessageDTO userMessage)
     {
@@ -147,7 +147,7 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
         var token = new JwtSecurityToken(
             issuer: configuration["JwtSettings:Issuer"],
             audience: configuration["JwtSettings:Audience"],
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.Now.AddMinutes(1),
             signingCredentials: credentials
         );
 
