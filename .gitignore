@@ -10,3 +10,14 @@ appsettings.json
 PlantAPI/bin/Debug/
 PlantAPI/obj/
 *.dll
+PlantAPI/bin/Debug/net8.0/PlantAPI.dll
+PlantAPI/bin/Debug/net8.0/PlantAPI.exe
+PlantAPI/bin/Debug/net8.0/PlantAPI.pdb
+PlantAPI/obj/Debug/net8.0/apphost.exe
+PlantAPI/obj/Debug/net8.0/PlantAPI.AssemblyInfo.cs
+PlantAPI/obj/Debug/net8.0/PlantAPI.AssemblyInfoInputs.cache
+PlantAPI/obj/Debug/net8.0/PlantAPI.dll
+PlantAPI/obj/Debug/net8.0/PlantAPI.pdb
+PlantAPI/obj/Debug/net8.0/ref/PlantAPI.dll
+PlantAPI/obj/Debug/net8.0/refint/PlantAPI.dll
+PlantAPI/obj/Debug/net8.0/refint/PlantAPI.dll
