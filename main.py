@@ -4,23 +4,13 @@ from machine import Pin, PWM
 import network
 import urequests as requests
 from time import sleep
-import random
 import json
+from boot import Boot
+from configuration import Configuration as variables
 
 led = Pin("LED", Pin.OUT)
 
-def read_env_file(file_path):
-    env_vars = {}
-    with open(file_path) as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith('#'):
-                key, value = line.split('=', 1)
-                value = value.strip('"')
-                env_vars[key] = value
-    return env_vars
-
-env_vars = read_env_file('.env')
+env_vars = variables.read_env_file('.env')
 
 TOKEN = env_vars.get('API_TOKEN')
 DEVICE_LABEL = "Test"
@@ -31,14 +21,13 @@ WIFI_PASS = env_vars.get('WIFI_PASSWORD')
 DELAY = 10  # Delay in seconds
 DATABASE_DELAY = 60 # Delay for saving to database in seconds.
 BOT_TOKEN = env_vars.get('BOT_TOKEN')
-#CHAT_ID = env_vars.get('CHAT_ID')
-CHAT_ID = env_vars.get('KIMMO_CHAT_ID')
 led_status = False
-temperature_mode = "C"
+
 DECIMAL_PRECISION = 1 # Round to 1 decimal for all values
 UPPER_BOUND_16_BIT = 65535 # 2^16-1
 UPPER_BOUND_8_BIT = 255 # 2^8-1
 LOWER_BOUND_8_BIT = 0
+
 RED_PIN = 18
 BLUE_PIN = 17
 GREEN_PIN = 16
@@ -51,10 +40,11 @@ blue_pwm = PWM(Pin(BLUE_PIN))
 green_pwm = PWM(Pin(GREEN_PIN))
 
 adc = machine.ADC(TEMP_PIN)
-sf = 4095/65535 # Scale factor
+sf = 4095/65535
 volt_per_adc = (3.3 / 4095)
 
-def read_temperature(temperature_mode): 
+# Read temperature in C
+def read_temperature(): 
     millivolts = adc.read_u16()
     adc_12b = millivolts * sf
     volt = adc_12b * volt_per_adc
@@ -62,25 +52,7 @@ def read_temperature(temperature_mode):
     dy = abs(0 - 0.5)
     shift = volt - 0.5
     temp = shift / (dy / dx)
-    if temperature_mode == "C":
-        return round(temp, DECIMAL_PRECISION)
-    elif temperature_mode == "F":
-        return round((temp*9/5)+32, DECIMAL_PRECISION)
-
-def connect():
-    wlan = network.WLAN(network.STA_IF)         # Put modem on Station mode
-    if not wlan.isconnected():                  # Check if already connected
-        print('connecting to network...')
-        wlan.active(True)                       # Activate network interface
-        wlan.config(pm = 0xa11140)
-        wlan.connect(WIFI_SSID, WIFI_PASS)  # Your WiFi Credential
-        print('Waiting for connection...', end='')
-        while not wlan.isconnected() and wlan.status() >= 0:
-            print('.', end='')
-            sleep(1)
-    ip = wlan.ifconfig()[0]
-    print('\nConnected on {}'.format(ip))
-    return ip
+    return round(temp, DECIMAL_PRECISION)
 
 # Builds the json to send the request
 def build_json(variable, value):
@@ -126,14 +98,17 @@ def get_telegram_updates(offset=None):
         if response:
             response.close()
 
-def add_user_to_database(name, chat_id):
-    url = f'https://plantobserverapi.azurewebsites.net/Test/User'
+def add_user_to_database(name, chat_id, content, token):
+    print("start", name)
+    url = f'https://plantobserverapi.azurewebsites.net/PlantData/PostMessage'
     headers = {
-        'Content-Type' : "application/json"
+        'Content-Type' : "application/json",
+        'Authorization': f'Bearer {token}'
     }
     data = {
-        'firstName' : name,
-        'userChatId' : chat_id
+        'firstName' : f"{name}",
+        'userChatId' : f"{chat_id}",
+        'content' : f"{content}"
     }
     print(data)
     try:
@@ -148,25 +123,32 @@ def add_user_to_database(name, chat_id):
         if response:
             response.close()
 
-def process_telegram_messages(updates):
-    print("Crash?")
+def process_telegram_messages(updates, token):
     processed_messages = []
     for update in updates:
         message = update.get('message', {})
         text = message.get('text', '')
         chat_id = message.get('chat', {}).get('id', '')
+        name = message.get('chat', {}).get('first_name')
+
+        # remove bad characters from name. Very hacky way to do it
+        temp_name = ""
+        for char in name:
+            if char.isalpha():
+                temp_name += char
+        name = temp_name
 
         if chat_id in processed_messages:
             send_message(chat_id, "You have spammed too much, please calm down. Your messages have been ignored.")
             continue
 
         processed_messages.append(chat_id)
-        add_user_to_database("test", chat_id)
+        add_user_to_database(name, chat_id, text, token)
 
         if text.startswith('/temperature'):
             try:
-                value = read_temperature(temperature_mode)
-                send_message(chat_id, f"Current temperature in Kimmo's room: {value} degrees {temperature_mode}")
+                value = read_temperature()
+                send_message(chat_id, f"Current temperature in Kimmo's room: {value} degrees C")
             except Exception as e:
                 print(f"Error reading temperature: {e}")
         
@@ -180,13 +162,6 @@ def process_telegram_messages(updates):
                 send_message(chat_id, f"LED toggled {status}")
             except Exception as e:
                 print(f"Error toggling LED: {e}")
-
-        elif text.startswith('/toggle_unit'):
-            try:
-                toggle_unit()
-                send_message(chat_id, f"The temperature mode has been set to: {temperature_mode}")
-            except Exception as e:
-                print(f"{e}")
         
         elif text.startswith('/masoud'):
             try:
@@ -216,14 +191,6 @@ def toggle_led():
         print(f"Error toggling LED: {e}")
     print("Toggled LED to:", led_status)
 
-def toggle_unit():
-    global temperature_mode
-    if temperature_mode == "C":
-        temperature_mode = "F"
-    else:
-        temperature_mode = "C"
-    print(temperature_mode)
-
 def send_message(chat_id, text):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
     payload = {
@@ -237,7 +204,7 @@ def send_message(chat_id, text):
     req.close()
 
 def get_token():
-    url = f'https://plantobserverapi.azurewebsites.net/Test/token?user={USERNAME}&password={PASSWORD}'
+    url = f'https://plantobserverapi.azurewebsites.net/PlantData/token?user={USERNAME}&password={PASSWORD}'
     headers = {
         "Accept": 'text/plain'
     }
@@ -258,7 +225,7 @@ def get_token():
             response.close()
 
 def send_to_api(token, temperature):
-    url = f'https://plantobserverapi.azurewebsites.net/Test/post'
+    url = f'https://plantobserverapi.azurewebsites.net/PlantData/post'
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {token}'
@@ -278,21 +245,26 @@ def send_to_api(token, temperature):
         if req:
             req.close()
 
-connect()
+Boot.connect(WIFI_SSID, WIFI_PASS)
 
 last_update_id = None
+current_time = time.time()
 
 while True:
     token = get_token()
-    value = read_temperature(temperature_mode)
+    value = read_temperature()
+    """
+    if value > 25:
+        send_message(792140634, "VARNING!! VARMT!!")
+    """
     send_to_api(token, value)
     returnValue = sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
     try:
         updates = get_telegram_updates(offset=last_update_id)
         if updates:
-            process_telegram_messages(updates)
+            process_telegram_messages(updates, token)
             last_update_id = updates[-1]['update_id'] + 1
+
     except Exception as e:
         print(f"Error in main loop: {e}")
     sleep(DELAY)
-

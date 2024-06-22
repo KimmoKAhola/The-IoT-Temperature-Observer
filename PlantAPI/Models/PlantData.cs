@@ -1,6 +1,6 @@
 ﻿namespace PlantAPI.Models;
 
-public record Test
+public record PlantData
 {
     public int Id { get; set; }
     public double Temperature { get; set; }

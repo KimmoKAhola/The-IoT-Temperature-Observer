@@ -7,3 +7,5 @@
 /.idea/
 appsettings.json
 *.json
+/PlantAPI/bin/
+/PlantAPI/obj/

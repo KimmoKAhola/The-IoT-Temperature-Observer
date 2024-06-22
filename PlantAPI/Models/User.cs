@@ -6,11 +6,10 @@ namespace PlantAPI.Models;
 public record User
 {
     [Key]
-    [JsonIgnore]
-    public int Id { get; set; }
-    public string FirstName { get; set; }
-    
-    [JsonIgnore]
-    public int NumberOfMessagesSent { get; set; }
     public string UserChatId { get; set; }
+    public string FirstName { get; set; }
+
+    [JsonIgnore]
+    public bool IsSubscriber { get; set; }
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 }

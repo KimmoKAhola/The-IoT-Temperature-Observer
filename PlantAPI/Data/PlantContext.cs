@@ -5,10 +5,10 @@ namespace PlantAPI;
 
 public class PlantContext : DbContext
 {
-    public PlantContext(DbContextOptions options) : base(options)
-    {
-    }
-    
-    public DbSet<Test> Test { get; set; } 
-    public DbSet<User> Users { get; set; } 
+    public PlantContext(DbContextOptions options)
+        : base(options) { }
+
+    public DbSet<PlantData> PlantData { get; set; }
+    public DbSet<Message> UserMessages { get; set; }
+    public DbSet<User> Users { get; set; }
 }

@@ -11,7 +11,8 @@ namespace PlantAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TestController(PlantContext context, IConfiguration configuration) : ControllerBase
+public class PlantDataController(PlantContext context, IConfiguration configuration)
+    : ControllerBase
 {
     [HttpGet("Temperature")]
     public async Task<IActionResult> GetTemperature()
@@ -19,7 +20,7 @@ public class TestController(PlantContext context, IConfiguration configuration) 
         try
         {
             var result = await context
-                .Test.Select(t => new TestDTO
+                .PlantData.Select(t => new PlantDataDTO
                 {
                     Temperature = t.Temperature.ToString(new CultureInfo("sv-SE")) + " \u00b0C",
                     Timestamp = t.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")
@@ -36,7 +37,7 @@ public class TestController(PlantContext context, IConfiguration configuration) 
 
     [Authorize]
     [HttpPost("post")]
-    public async Task<IActionResult> Put(TestModel model)
+    public async Task<IActionResult> Put(PlantDataModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -44,7 +45,7 @@ public class TestController(PlantContext context, IConfiguration configuration) 
         }
         try
         {
-            var m = new Test { Temperature = model.Temperature, Timestamp = DateTime.UtcNow };
+            var m = new PlantData { Temperature = model.Temperature, Timestamp = DateTime.UtcNow };
 
             await context.AddAsync(m);
             await context.SaveChangesAsync();
@@ -54,7 +55,6 @@ public class TestController(PlantContext context, IConfiguration configuration) 
         catch (Exception e)
         {
             Console.WriteLine(e);
-            // return StatusCode(500, "Error");
         }
 
         return StatusCode(401, "Unauthorized");
@@ -75,9 +75,11 @@ public class TestController(PlantContext context, IConfiguration configuration) 
 
         return BadRequest();
     }
-    
-    [HttpPost("User")]
-    public async Task<IActionResult> Put(User user)
+
+    [HttpPost("PostMessage")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [Authorize]
+    public async Task<IActionResult> Put([FromBody] MessageDTO userMessage)
     {
         if (!ModelState.IsValid)
         {
@@ -86,26 +88,34 @@ public class TestController(PlantContext context, IConfiguration configuration) 
 
         try
         {
-            var database = await context.Users.ToListAsync();
-            if (database.Any(u => u.UserChatId == user.UserChatId))
+            var user = await context.Users.FindAsync(userMessage.UserChatId);
+
+            if (user != null)
             {
-                var u = database.Find(u => u.UserChatId == user.UserChatId);
-                u.NumberOfMessagesSent += 1;
-                await context.SaveChangesAsync();
-                return Ok();
+                var message = new Message
+                {
+                    User = user,
+                    Content = userMessage.Content,
+                    UserChatId = userMessage.UserChatId
+                };
+                user.Messages.Add(message);
             }
             else
             {
-                var newUser = new User
+                var message = new Message
                 {
-                    FirstName = user.FirstName,
-                    UserChatId = user.UserChatId,
-                    NumberOfMessagesSent = 0
+                    UserChatId = userMessage.UserChatId,
+                    Content = userMessage.Content,
+                    User = new User
+                    {
+                        FirstName = userMessage.FirstName,
+                        UserChatId = userMessage.UserChatId
+                    }
                 };
-                await context.AddAsync(newUser);
-                await context.SaveChangesAsync();
-                return Ok();
+                await context.AddAsync(message);
             }
+            await context.SaveChangesAsync();
+            return Ok("Post successful!");
         }
         catch (Exception e)
         {

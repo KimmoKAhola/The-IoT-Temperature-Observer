@@ -2,7 +2,7 @@
 
 namespace PlantAPI.Controllers;
 
-public class TestModel
+public class PlantDataModel
 {
     public double Temperature { get; set; }
 
