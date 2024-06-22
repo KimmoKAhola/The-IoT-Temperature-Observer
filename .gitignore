@@ -7,5 +7,6 @@
 /.idea/
 appsettings.json
 *.json
-bin/
-obj/
+PlantAPI/bin/Debug/
+PlantAPI/obj/
+*.dll
