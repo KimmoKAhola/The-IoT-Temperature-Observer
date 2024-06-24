@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace PlantAPI.Models;
 
-public record Message
+public record UserBotMessage
 {
     [Key]
     public int MessageId { get; set; }

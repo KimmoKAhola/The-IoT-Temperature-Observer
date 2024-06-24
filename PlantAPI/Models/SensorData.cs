@@ -1,6 +1,6 @@
 ﻿namespace PlantAPI.Models;
 
-public record PlantData
+public record SensorData
 {
     public int Id { get; set; }
     public double Temperature { get; set; }
