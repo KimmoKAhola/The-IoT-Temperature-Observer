@@ -72,6 +72,8 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
     /// <param name="id">The identifier of the user to be updated.</param>
     /// <param name="patch">The JsonPatchDocument object containing the changes to be applied to the user.</param>
     /// <returns>The HTTP response result. Returns 400 if the patch is null, the user with the given id does not exist, or the applied patch is not valid. Returns 200 if the user is successfully updated.</returns>
+    [Authorize]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateUser(
         string id,

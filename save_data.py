@@ -39,7 +39,6 @@ class SaveData:
         except:
             return None
         
-    @print_method_name
     def sendData(self, device, variable, value):
         try:
             url = "https://industrial.api.ubidots.com/"
@@ -81,19 +80,25 @@ class SaveData:
             if req:
                 req.close()
 
-    def update_subscriber_status(self, value):
-        url = f'https://plantobserverapi.azurewebsites.net/PlantData/post'
+    def update_subscriber_status(self, id, value, token):
+        url = f'https://plantobserverapi.azurewebsites.net/PlantData/{id}'
         headers = {
             'Content-Type': 'application/json',
+            'Authorization': f'Bearer {token}'
         }
-        data = { 
+        data = [
+            { 
             "op": "replace", 
             "path": "/isSubscriber", 
             "value": value }
+        ]
+        print(url)
+        print(data)
         try:
             req = requests.patch(url, headers=headers, json=data)
             if req.status_code == 200:
                 print("update.py successful")
+                return True
             else:
                 print(req.status_code)
         except Exception as e:
