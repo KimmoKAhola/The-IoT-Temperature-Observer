@@ -1,8 +1,8 @@
 import machine
 
 class TemperatureSensor:
-    def __init__(self, temp_pin):
-        self.adc = machine.ADC(temp_pin)
+    def __init__(self, pin):
+        self.adc = machine.ADC(pin)
         self.sf = 4095/65535
         self.volt_per_adc = (3.3 / 4095)
         self.DECIMAL_PRECISION = 1

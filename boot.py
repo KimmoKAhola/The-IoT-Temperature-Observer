@@ -1,7 +1,10 @@
 # boot.py -- run on boot-up
 import network
 from time import sleep
+import machine
+
 class Boot:
+    
     @staticmethod
     def connect(WIFI_SSID, WIFI_PASS):
         wlan = network.WLAN(network.STA_IF)         # Put modem on Station mode
@@ -17,3 +20,9 @@ class Boot:
         ip = wlan.ifconfig()[0]
         print('\nConnected on {}'.format(ip))
         return ip
+    
+    @staticmethod
+    def get_sensor_id():
+        unique_id = machine.unique_id()
+        unique_id_hex = ''.join(['{:02x}'.format(b) for b in unique_id])
+        return unique_id_hex

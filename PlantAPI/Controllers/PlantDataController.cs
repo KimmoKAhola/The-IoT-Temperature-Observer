@@ -14,30 +14,30 @@ namespace PlantAPI.Controllers;
 public class PlantDataController(PlantContext context, IConfiguration configuration)
     : ControllerBase
 {
-    [HttpGet("Temperature")]
-    public async Task<IActionResult> GetTemperature()
-    {
-        try
-        {
-            var result = await context
-                .PlantData.Select(t => new PlantDataDTO
-                {
-                    Temperature = t.Temperature.ToString(new CultureInfo("sv-SE")) + " \u00b0C",
-                    Timestamp = t.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")
-                })
-                .ToListAsync();
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return StatusCode(500, "Server not available");
-        }
-    }
+    // [HttpGet("Temperature")]
+    // public async Task<IActionResult> GetTemperature()
+    // {
+    //     try
+    //     {
+    //         var result = await context
+    //             .PlantData.Select(t => new PlantDataDTO
+    //             {
+    //                 Temperature = t.Temperature.ToString(new CultureInfo("sv-SE")) + " \u00b0C",
+    //                 Timestamp = t.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")
+    //             })
+    //             .ToListAsync();
+    //         return Ok(result);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //         return StatusCode(500, "Server not available");
+    //     }
+    // }
 
     [Authorize]
     [HttpPost("post")]
-    public async Task<IActionResult> Put(PlantDataModel model)
+    public async Task<IActionResult> Put(PlantDataDTO model)
     {
         if (!ModelState.IsValid)
         {
@@ -45,7 +45,17 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
         }
         try
         {
-            var m = new PlantData { Temperature = model.Temperature, Timestamp = DateTime.UtcNow };
+            var sensor = await context.Sensors.FindAsync(model.Sensor_Id);
+
+            //TODO add null check, for now it is OK.
+            var m = new PlantData
+            {
+                Temperature = Convert.ToDouble(model.Temperature),
+                DHT_Temperature = Convert.ToInt32(model.DHT_Temperature),
+                DHT_Humidity = Convert.ToInt32(model.DHT_Humidity),
+                Sensor = sensor
+            };
+            m.Timestamp = m.Timestamp.AddHours(2);
 
             await context.AddAsync(m);
             await context.SaveChangesAsync();

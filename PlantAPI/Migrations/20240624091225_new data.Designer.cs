@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlantAPI;
 
@@ -11,9 +12,11 @@ using PlantAPI;
 namespace PlantAPI.Migrations
 {
     [DbContext(typeof(PlantContext))]
-    partial class PlantContextModelSnapshot : ModelSnapshot
+    [Migration("20240624091225_new data")]
+    partial class newdata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,9 +65,6 @@ namespace PlantAPI.Migrations
                     b.Property<int>("DHT_Temperature")
                         .HasColumnType("int");
 
-                    b.Property<string>("SensorId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<double>("Temperature")
                         .HasColumnType("float");
 
@@ -73,23 +73,7 @@ namespace PlantAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SensorId");
-
                     b.ToTable("PlantData");
-                });
-
-            modelBuilder.Entity("PlantAPI.Models.Sensor", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sensors");
                 });
 
             modelBuilder.Entity("PlantAPI.Models.User", b =>
@@ -118,15 +102,6 @@ namespace PlantAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PlantAPI.Models.PlantData", b =>
-                {
-                    b.HasOne("PlantAPI.Models.Sensor", "Sensor")
-                        .WithMany()
-                        .HasForeignKey("SensorId");
-
-                    b.Navigation("Sensor");
                 });
 
             modelBuilder.Entity("PlantAPI.Models.User", b =>

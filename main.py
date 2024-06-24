@@ -1,5 +1,6 @@
 import time
 from machine import Pin, PWM
+import machine
 import urequests as requests
 from time import sleep
 import json
@@ -7,6 +8,7 @@ from boot import Boot
 from configuration import Configuration as variables
 from temperature_sensor import TemperatureSensor
 from save_data import SaveData
+from temp import DHT_Sensor as DHTSensor
 
 led = Pin("LED", Pin.OUT)
 
@@ -21,7 +23,7 @@ WIFI_PASS = env_vars.get('WIFI_PASSWORD')
 DELAY = 10  # Delay in seconds
 DATABASE_DELAY = 60 # Delay for saving to database in seconds.
 BOT_TOKEN = env_vars.get('BOT_TOKEN')
-led_status = False
+SENSOR_ID = Boot.get_sensor_id()
 
 DECIMAL_PRECISION = 1 # Round to 1 decimal for all values
 UPPER_BOUND_16_BIT = 65535 # 2^16-1
@@ -31,6 +33,7 @@ LOWER_BOUND_8_BIT = 0
 RED_PIN = 18
 BLUE_PIN = 17
 GREEN_PIN = 16
+DHT_PIN = 26
 TEMP_PIN = 27
 USERNAME = env_vars.get('USERNAME')
 PASSWORD = env_vars.get('PASSWORD')
@@ -39,6 +42,7 @@ red_pwm = PWM(Pin(RED_PIN))
 blue_pwm = PWM(Pin(BLUE_PIN))
 green_pwm = PWM(Pin(GREEN_PIN))
 
+dht_sensor = DHTSensor(DHT_PIN)
 temp_sensor = TemperatureSensor(TEMP_PIN)
 save = SaveData(TOKEN)
 
@@ -111,9 +115,26 @@ def process_telegram_messages(updates, token):
         if text.startswith('/temperature'):
             try:
                 value = temp_sensor.read_temperature()
-                send_message(chat_id, f"Current temperature in Kimmo's room: {value} degrees C")
+                send_message(chat_id, f"Current temperature in Kimmo's room: {value} °C")
             except Exception as e:
                 print(f"Error reading temperature: {e}")
+
+        elif text.startswith('/commands'):
+            try:
+                send_message(chat_id, "/temperature\n/all_data\n/dht_sensor\n/toggle_led\n")
+            except Exception as e:
+                print(e)
+        elif text.startswith('/all_data'):
+            try:
+                send_message(chat_id, f"Temp: {value} C, Temp 2: {dht_val_1} C, Humidity: {dht_val_2} %")
+            except Exception as e:
+                print(f"{e}")
+
+        elif text.startswith('/dht_sensor'):
+            try:
+                send_message(chat_id, f"{dht_val_1} {dht_val_2}")
+            except Exception as e:
+                print(f"{e}")
         
         elif text.startswith('/toggle_led'):
             try:
@@ -138,7 +159,7 @@ def process_telegram_messages(updates, token):
                 print(f"{e}")
         else:
             try:
-                send_message(chat_id, "Unknown command. Type /Commands to see a list of available commands.")
+                send_message(chat_id, "Unknown command. Type /commands to see a list of available commands.")
             except Exception as e:
                 print(f"Error with the else: {e}")
 
@@ -163,6 +184,7 @@ def send_message(chat_id, text):
     headers = {
         'Content-Type': 'application/json'
     }
+    print("send message:", text)
     req = requests.post(url=url, headers=headers, json=payload)
     req.close()
 
@@ -175,8 +197,8 @@ current_time = time.time()
 while True:
     token = save.get_token(USERNAME, PASSWORD)
     value = temp_sensor.read_temperature()
-
-    save.send_to_api(token, value)
+    dht_val_1, dht_val_2 = dht_sensor.read_values()
+    save.send_to_api(token=token, temperature=value, dht_temperature=dht_val_1, dht_humidity=dht_val_2, sensor_id=SENSOR_ID)
     save.sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
     try:
         updates = get_telegram_updates(offset=last_update_id)
@@ -186,4 +208,6 @@ while True:
 
     except Exception as e:
         print(f"Error in main loop: {e}")
+    """
+    """
     sleep(DELAY)

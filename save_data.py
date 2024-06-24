@@ -1,5 +1,11 @@
 import urequests as requests
 
+def print_method_name(func):
+    def wrapper(*args, **kwargs):
+        print(f"Method: {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+
 class SaveData:
     def __init__(self, api_token):
         self.api_token = api_token
@@ -32,7 +38,8 @@ class SaveData:
             return data
         except:
             return None
-
+        
+    @print_method_name
     def sendData(self, device, variable, value):
         try:
             url = "https://industrial.api.ubidots.com/"
@@ -49,15 +56,19 @@ class SaveData:
         except:
             pass
         
-    def send_to_api(self, token, temperature):
+    def send_to_api(self, token, temperature, dht_temperature, dht_humidity, sensor_id):
         url = f'https://plantobserverapi.azurewebsites.net/PlantData/post'
         headers = {
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {token}'
         }
         data = {
-            "temperature" : temperature
+            "temperature" : float(temperature),
+            "dht_temperature": int(dht_temperature),
+            "dht_humidity" : int(dht_humidity),
+            "sensor_id" : sensor_id
         }
+        print(data)
         try:
             req = requests.post(url, headers=headers, json=data)
             if req.status_code == 200:
