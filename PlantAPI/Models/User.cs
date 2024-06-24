@@ -11,5 +11,5 @@ public record User
 
     [JsonIgnore]
     public bool IsSubscriber { get; set; }
-    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+    public virtual ICollection<UserBotMessage> Messages { get; set; } = new List<UserBotMessage>();
 }

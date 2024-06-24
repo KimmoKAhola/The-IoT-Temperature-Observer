@@ -32,7 +32,7 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
     {
         try
         {
-            var res = await context.PlantData.ToListAsync();
+            var res = await context.SensorData.ToListAsync();
 
             if (date.HasValue)
             {
@@ -118,7 +118,7 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
             var sensor = await context.Sensors.FindAsync(model.Sensor_Id);
 
             //TODO add null check, for now it is OK.
-            var m = new PlantData
+            var m = new SensorData
             {
                 Temperature = Convert.ToDouble(model.Temperature),
                 DHT_Temperature = Convert.ToInt32(model.DHT_Temperature),
@@ -173,7 +173,7 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
 
             if (user != null)
             {
-                var message = new Message
+                var message = new UserBotMessage
                 {
                     User = user,
                     Content = userMessage.Content,
@@ -183,7 +183,7 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
             }
             else
             {
-                var message = new Message
+                var message = new UserBotMessage
                 {
                     UserChatId = userMessage.UserChatId,
                     Content = userMessage.Content,
