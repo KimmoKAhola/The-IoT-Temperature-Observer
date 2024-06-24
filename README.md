@@ -1,4 +1,9 @@
 # The-Plant-Observer
+An IoT project for the course 24ST - 1DT305 at LNU (https://lnu-ftk.instructure.com/courses/402).
+
+Current implementation: one microcontroller that reads values from different sensors and saves to a database. A telegram bot is connected to this microcontroller and users can, if they want to, request selected live data from the microcontroller.
+
+Future ideas: implement more sensors and create a smart home.
 
 ## API
 https://plantobserverapi.azurewebsites.net/swagger/index.html
