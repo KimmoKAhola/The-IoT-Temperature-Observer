@@ -1,6 +1,7 @@
 # The-Plant-Observer
 An IoT project for the course 24ST - 1DT305 at LNU (https://lnu-ftk.instructure.com/courses/402).
-This project is meant to be a stepping stone to a larger network of connected sensors, hence the focus on databases and API:s.
+
+Future ideas: implement more sensors and create a smart home.
 
 ## API
 https://plantobserverapi.azurewebsites.net/swagger/index.html
