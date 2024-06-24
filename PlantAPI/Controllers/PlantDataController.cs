@@ -76,7 +76,8 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
         try
         {
             var res = await context.Users.ToListAsync();
-            return Ok(res);
+            var users = res.Select(x => "Name: " + x.FirstName);
+            return Ok(users);
         }
         catch (Exception e)
         {
