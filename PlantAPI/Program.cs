@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 var jwtSettings = configuration.GetSection("JwtSettings");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
 var issuer = jwtSettings["Issuer"]!;
@@ -24,6 +25,8 @@ Console.WriteLine(audience);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>
 {
+    o.SwaggerDoc("v1", new OpenApiInfo { Title = "", Version = "" });
+
     o.AddSecurityDefinition(
         "Bearer",
         new OpenApiSecurityScheme
@@ -51,6 +54,9 @@ builder.Services.AddSwaggerGen(o =>
             }
         }
     );
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    o.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 builder.Services.AddDbContext<PlantContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
@@ -81,7 +87,10 @@ builder
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(o =>
+{
+    o.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+});
 
 app.UseHttpsRedirection();
 

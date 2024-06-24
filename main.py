@@ -135,7 +135,16 @@ def process_telegram_messages(updates, token):
                 send_message(chat_id, f"{dht_val_1} {dht_val_2}")
             except Exception as e:
                 print(f"{e}")
-        
+        elif text.startswith('/subscribe'):
+            try:
+                save.update_subscriber_status(True)
+            except Exception as e:
+                print(e)
+        elif text.startswith('/unsubscribe'):
+            try:
+                save.update_subscriber_status(False)
+            except Exception as e:
+                print(e)
         elif text.startswith('/toggle_led'):
             try:
                 toggle_led()

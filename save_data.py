@@ -80,3 +80,25 @@ class SaveData:
         finally:
             if req:
                 req.close()
+
+    def update_subscriber_status(self, value):
+        url = f'https://plantobserverapi.azurewebsites.net/PlantData/post'
+        headers = {
+            'Content-Type': 'application/json',
+        }
+        data = { 
+            "op": "replace", 
+            "path": "/isSubscriber", 
+            "value": value }
+        try:
+            req = requests.patch(url, headers=headers, json=data)
+            if req.status_code == 200:
+                print("update.py successful")
+            else:
+                print(req.status_code)
+        except Exception as e:
+            print(e)
+        finally:
+            if req:
+                req.close()
+        pass

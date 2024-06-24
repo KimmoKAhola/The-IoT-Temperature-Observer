@@ -2,38 +2,106 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PlantAPI.Models;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace PlantAPI.Controllers;
 
+/// <summary>
+/// PlantDataController handles the retrieval and modification of plant data in the plant database.
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 public class PlantDataController(PlantContext context, IConfiguration configuration)
     : ControllerBase
 {
-    // [HttpGet("Temperature")]
-    // public async Task<IActionResult> GetTemperature()
-    // {
-    //     try
-    //     {
-    //         var result = await context
-    //             .PlantData.Select(t => new PlantDataDTO
-    //             {
-    //                 Temperature = t.Temperature.ToString(new CultureInfo("sv-SE")) + " \u00b0C",
-    //                 Timestamp = t.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")
-    //             })
-    //             .ToListAsync();
-    //         return Ok(result);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         Console.WriteLine(e);
-    //         return StatusCode(500, "Server not available");
-    //     }
-    // }
+    /// <summary>
+    /// Retrieves the temperature data from the plant database.
+    /// </summary>
+    /// <param name="date">Optional. The date for which to retrieve the temperature data.</param>
+    /// <returns>A collection of PlantViewModel objects containing the temperature data.</returns>
+    [HttpGet("Temperature")]
+    [SwaggerOperation(Summary = "Test", Description = "Test des")]
+    public async Task<IActionResult> GetTemperature(
+        [FromQuery, SwaggerParameter(Description = "Test", Required = false)] DateTime? date
+    )
+    {
+        try
+        {
+            var res = await context.PlantData.ToListAsync();
+
+            if (date.HasValue)
+            {
+                res = res.Where(x => x.Timestamp.Date == date.Value.Date).ToList();
+            }
+
+            var result = res.Select(x => new PlantViewModel
+            {
+                Temperature = x.Temperature,
+                DHT_Temperature = x.DHT_Temperature,
+                DHT_Humidity = x.DHT_Humidity,
+                Timestamp = x.Timestamp
+            });
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, "Server not available");
+        }
+    }
+
+    /// <summary>
+    /// Test method description.
+    /// </summary>
+    /// <param name="id">The identifier parameter.</param>
+    /// <returns>The HTTP response result.</returns>
+    [HttpGet]
+    public async Task<IActionResult> Test(int? id)
+    {
+        return null;
+    }
+
+    /// <summary>
+    /// Updates the user information in the plant database.
+    /// </summary>
+    /// <param name="id">The identifier of the user to be updated.</param>
+    /// <param name="patch">The JsonPatchDocument object containing the changes to be applied to the user.</param>
+    /// <returns>The HTTP response result. Returns 400 if the patch is null, the user with the given id does not exist, or the applied patch is not valid. Returns 200 if the user is successfully updated.</returns>
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateUser(
+        string id,
+        [FromBody] JsonPatchDocument<UpdateUserModel> patch
+    )
+    {
+        if (patch != null)
+        {
+            var user = await context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            var model = new UpdateUserModel { IsSubscriber = user.IsSubscriber };
+            patch.ApplyTo(model, ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            user.IsSubscriber = model.IsSubscriber;
+
+            context.Update(user);
+            await context.SaveChangesAsync();
+            return Ok();
+        }
+
+        return BadRequest();
+    }
 
     [Authorize]
     [HttpPost("post")]
