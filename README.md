@@ -184,6 +184,35 @@ def sendData(self, device, variable, value):
 
 <details>
       
+<summary>Save data to Azure</summary>
+
+```
+def send_to_api(self, temperature):
+        # this assumes that you have your own azure web service
+        url = f'https://YOURAZUREPROGRAM.azurewebsites.net/'
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        data = {
+            "temperature" : float(temperature)
+        }
+        print(data)
+        try:
+            req = requests.post(url, headers=headers, json=data)
+            if req.status_code == 200:
+                print("Save successful")
+            else:
+                print(req.status_code)
+        except Exception as e:
+            print(e)
+        finally:
+            if req:
+                req.close()
+```      
+</details>
+
+<details>
+      
 <summary>The main loop</summary>      
 
 ### main.py
