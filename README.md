@@ -443,7 +443,8 @@ Click here to write to the bot. Click on the menu to see available commands.
 https://plantobserverapi.azurewebsites.net/swagger/index.html
 
 ## Telegram chat bot
-Interact with it if you want to. Note that some options may only work for me personally at the moment.
+Interact with it if you want to. If the microcontroller is live you will receive a response within 20 seconds.
+
 https://t.me/PlantObserverBot
 
 
