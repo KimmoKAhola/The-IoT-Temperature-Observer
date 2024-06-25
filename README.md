@@ -5,6 +5,44 @@ Current implementation: one microcontroller that reads values from different sen
 
 Future ideas: implement more sensors and create a smart home.
 
+# Introduction - tutorial on how to....
+
+# Objective
+
+I want to create a sensor network. This is a tutorial to build the first sensor and save information to a database
+
+# Materials
+
+Sensors used in this example: DHT_11 (temp + humidity). Analogue temperature sensor.
+
+Material: Breadboard, Raspberry pi pico, jumper cables, USB cable
+
+# Setup
+
+Chosen IDE/Editor - VSCode, Rider for the .net api.
+Pymakr
+
+### chosen IDE/Editor
+### How the code is uploaded
+### Steps needed, installation etc
+
+
+# Circuit Diagram
+
+https://fritzing.org/
+
+# Code snippets
+
+# Connectivity
+
+# Data Visualization/presentation
+
+Ubidots as well as Azure (free for 12 months if you are a student)
+
+# Final thoughts
+
+
+
 ## API
 https://plantobserverapi.azurewebsites.net/swagger/index.html
 
