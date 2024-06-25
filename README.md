@@ -1,6 +1,5 @@
 # The IoT Temperature Observer 
 Author: Kimmo Ahola (ka223pd)
-Give a short and brief overview of what your project is about. What needs to be included:
 
 - [x] Title
 - [x] Your name and student credentials (ka223pd)
@@ -14,18 +13,13 @@ The purpose of this project has been to create a simple endpoint that I can plac
 
 The future goals of this project is to build my own database and api services by combining the microcontrollers with .net APIs (I study to become a .NET Developer) and as such this codebase contains free to use code for .NET services as well. This will later be used to implement my own smart home (I hope).
 
-Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus will be on those parts. Links to tools used for the .NET code will be provided and python snippets on how to send data to these services will also be shown. The C# code and database design will however not be covered at all.
+Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on those parts. Links to tools used for the .NET code will be provided and simple python snippets on how to send data to these services will also be shown. The C# code and database design will however not be covered at all.
 
-Current implementation: one microcontroller that reads values from different sensors and saves to a database. A telegram bot is connected to this microcontroller and users can, if they want to, request selected live data from the microcontroller. Since this project is aimed for beginners all code will be run on the microcontroller itself and the bot will utilize HTTP Requests to fetch/send data.
+The telegram bot code will also be kept beginner friendly and utilize HTTP requests to fetch/send data. This is not a scalable solution but will work fine for personal use.
 
-Time required to implement this project yourself: 6-10 hours depending on experience (for the python part only).
+Time required to implement this project yourself: 6-10 hours depending on experience (for the python part).
 
-# Introduction - tutorial on how to....
 # Objective
-
-I want to create a sensor network. This is a tutorial to build the first sensor and save information to a database
-
-Objective
 
 Describe why you have chosen to build this specific device. What purpose does it serve? What do you want to do with the data, and what new insights do you think it will give?
 
@@ -33,15 +27,12 @@ Describe why you have chosen to build this specific device. What purpose does it
 - [ ] What purpose does it serve
 - [ ] What insights you think it will give
 
-# Materials
+# Materials needed
 
-Sensors used in this example: DHT_11 (temp + humidity). Analogue temperature sensor.
-
-Material: Breadboard, Raspberry pi pico, jumper cables, USB cable
-
-- [ ] List of material
-- [ ] What the different things (sensors, wires, controllers) do - short specifications
-- [ ] Where you bought them and how much they cost
+- [x] List of material
+- [x] What the different things (sensors, wires, controllers) do - short specifications
+- [x] Where you bought them and how much they cost
+- [ ] Add sum of all material
       
 | Product | Quantity | Link  | Price (SEK) | Description |
 | :---         |     ---:       |          :--- | ---: | :--- |
@@ -52,8 +43,6 @@ Material: Breadboard, Raspberry pi pico, jumper cables, USB cable
 | Digital temperatur- och fuktsensor DHT11 | 1 | [electrokit](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | 49 | Measure temperature and humidity (Accuracy: -1) |
 | MCP9700 TO-92 Temperaturgivare | 1 | [electrokit](https://www.electrokit.com/mcp9700-to-92-temperaturgivare) | 12 | Measure temperature (Accuracy: -1) |
 | Total price | | | -2000 |
-
-
 
 # Setup
 
@@ -84,7 +73,10 @@ It will look something like this
 <p align="center">
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-bot-instructions.png" alt="telegram-bot-instructions">
 </p>
-You now have your own telegram bot to send notifications to yourself or your friends!
+
+1. Click on the link to open the chat.
+2. Store the api key in your .env file and keep it secret.
+3. You now have your own telegram bot to send notifications to yourself or your friends!
 
 ### Tools needed to implement the .NET API
 
