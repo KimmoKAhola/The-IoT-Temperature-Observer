@@ -73,7 +73,9 @@ If VSCode is used the Pymakr plugin has to be installed as well.
 - [ ] How the code is uploaded
 - [ ] Steps that you needed to do for your computer. Installation of Node.js, extra drivers, etc.
 
-
+To implement your own telegram bot, please click on this link and follow the instructions: https://telegram.me/BotFather.
+You will receive a
+![telegram-bot-instructions](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-bot-instructions.png)
 
 ### if you wish to implement the .net code
 
