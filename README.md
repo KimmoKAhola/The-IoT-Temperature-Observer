@@ -9,7 +9,7 @@ Give a short and brief overview of what your project is about. What needs to be 
 
 # Introduction
 This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402).
-The purpose of this project has been to create a simple endpoint that I can place somewhere and have it collect data. Users can interact with this controller by using a telegram app (some functionality is not available for everyone at the moment, like subscriber).
+The purpose of this project has been to create a simple endpoint that I can place somewhere and have it collect data. Users can interact with this controller by using a telegram bot and writing certain commands to it.
 
 Since this course had a focus on microcontrollers/IoT and python the instructions will go in depth for those parts. 
 A .NET api part is part of the code base and links to tools will be provided for the curious but the code will not be covered in this project.
@@ -73,9 +73,12 @@ If VSCode is used the Pymakr plugin has to be installed as well.
 - [ ] How the code is uploaded
 - [ ] Steps that you needed to do for your computer. Installation of Node.js, extra drivers, etc.
 
-To implement your own telegram bot, please click on this link and follow the instructions: https://telegram.me/BotFather.
-You will receive a
-![telegram-bot-instructions](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-bot-instructions.png)
+To get your own telegram bot, please click on this link and follow the instructions: https://telegram.me/BotFather.
+
+It will look something like this
+<p align="center">
+      <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-bot-instructions.png" alt="telegram-bot-instructions">
+</p>
 
 ### if you wish to implement the .net code
 
