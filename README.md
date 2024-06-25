@@ -1,3 +1,10 @@
+# TODO
+- [ ] Implement circuit diagram
+- [ ] Good pictures of the project
+- [ ] Good looking dashboard
+- [ ] Thonny instructions
+- [ ] Double-check the code snippets, clean them if needed.
+
 # The IoT Temperature Observer 
 Author: Kimmo Ahola (ka223pd)
 
@@ -418,14 +425,14 @@ while True:
 
 # Connectivity
 
-- [ ] How often is the data sent?
-## Currently everything is written as a continuous loop without any asynchronous methods. A simple sleep delay of 10 seconds is used in the main loop. With all the delays of saving/fetching from api and database this turns out to be 2-3 calls per minute.
-- [ ] Which wireless protocols did you use (WiFi, LoRa, etc …)?
+- [x] How often is the data sent?
+The main loop in the code has a 10 second delay. Since the code is written synchronously it means that due to all the delays of calling the different API:s this delay turns out to be closer to 20-25 seconds. This is gives a good balance between datapoints from the sensors and response speed in the chat. It is possible to write the code asynchronously and solve this issue of code blocking, but since I plan on moving the bot away from the microcontroller to a dedicated server in the future it is unnecessary to rewrite the code right now.
+
+- [x] Which wireless protocols did you use (WiFi, LoRa, etc …)?
 ## WIFI. Why? 100 % uptime, fast response time etc.
-cons: needlessly high resolution. Currently 2-3 datapoints are saved per minutes which is unneccessarily high. This will be changed in the future.
-- [ ] Which transport protocols were used (MQTT, webhook, etc …)
-## webhook? HTTP requests, post, get, patch
-- [ ] *Elaborate on the design choices regarding data transmission and wireless protocols. That is how your choices affect the device range and battery consumption.
+Currently WIFI is used as the wireless protocol. As the code for the chat bot is run on the board itself constant uptime is needed to have good response speed. When the code for the chat bot is moved to another service another, more efficient protocol, will be used.
+
+HTTP requests are used to transfer data. JSON, post, get, patch etc
 
 # Data Visualization/presentation
 
@@ -433,11 +440,14 @@ cons: needlessly high resolution. Currently 2-3 datapoints are saved per minutes
 
 # CHANGE ME CHANGE ME CHANGE ME!!!
 Dashboard: ![myimage-alt-tag](https://raw.githubusercontent.com/KimmoKAhola/The-IoT-Temperature-Observer/master/pictures/lnu-dashboard.png)
-- [ ] How often is data saved in the database.
-- [ ] *Explain your choice of database.
+- [x] How often is data saved in the database.
+About 2-3 times per minute for the sensor data table. Users and user messages are saved to their tables whenever the bot reads the messages.
+- [x] *Explain your choice of database.
+Ubidots is a convenient low code solution to quickly give a good looking visual representation. Since I plan to move away from this in the future and utilize something else I save the data permanently to a SQL Server hosted on Azure. This choice is based on Azure's heavy integration with the .NET framework and the fact that it is possible to use it for free for up to 12 months with a student account (that's how they get you hooked...).
 - [ ] *Automation/triggers of the data.
+The bot gets triggered whenever there are new unhandled messages.
 - [ ] Describe platform in terms of functionality
-- [ ] *Explain and elaborate what made you choose this platform
+- [x] *Explain and elaborate what made you choose this platform
 Ubidots as well as Azure (free for 12 months if you are a student)
 
 ## Ubidots Dashboard
