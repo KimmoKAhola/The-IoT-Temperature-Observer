@@ -298,9 +298,13 @@ last_update_id = None
 while True:
     # read temperature from the temp sensor
     value = temp_sensor.read_temperature()
+    # Here you could add a trigger to notify yourself
+    # if value > 30:
+    #       send_message(YOUR_CHAT_ID, "The temperature is over 30 degrees. Drink some water!")
 
     # read temperature and humidity from the DHT 11 sensor
     dht_val_1, dht_val_2 = dht_sensor.read_values()
+
     # send data to the dashboard
     save.sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
 
