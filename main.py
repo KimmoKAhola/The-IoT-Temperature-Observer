@@ -15,7 +15,7 @@ led = Pin("LED", Pin.OUT)
 env_vars = variables.read_env_file('.env')
 
 TOKEN = env_vars.get('API_TOKEN')
-DEVICE_LABEL = "Test"
+DEVICE_LABEL = "ka223pd"
 VARIABLE_LABEL = "sensor"
 LED_LABEL = "led_sensor"
 WIFI_SSID = env_vars.get('WIFI_SSID')
@@ -126,7 +126,9 @@ def process_telegram_messages(updates, token):
                 print(e)
         elif text.startswith('/all_data'):
             try:
-                send_message(chat_id, f"Temp: {value} C, Temp 2: {dht_val_1} C, Humidity: {dht_val_2} %")
+                value = temp_sensor.read_temperature()
+                dht_1, dht_2 = dht_sensor.read_values()
+                send_message(chat_id, f"Temp: {value} C, Temp 2: {dht_1} C, Humidity: {dht_2} %")
             except Exception as e:
                 print(f"{e}")
 
@@ -182,6 +184,7 @@ def toggle_led():
     try:
         led_status = not led.value()
         led.value(led_status)
+        print(DEVICE_LABEL, LED_LABEL, int(led_status), led_status)
         save.sendData(DEVICE_LABEL, LED_LABEL, int(led_status))
 
     except Exception as e:
@@ -213,6 +216,8 @@ while True:
     dht_val_1, dht_val_2 = dht_sensor.read_values()
     save.send_to_api(token=token, temperature=value, dht_temperature=dht_val_1, dht_humidity=dht_val_2, sensor_id=SENSOR_ID)
     save.sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
+    save.sendData(DEVICE_LABEL, "dht_temp", dht_val_1)
+    save.sendData(DEVICE_LABEL, "dht_humidity", dht_val_2)
     try:
         updates = get_telegram_updates(offset=last_update_id)
         if updates:
