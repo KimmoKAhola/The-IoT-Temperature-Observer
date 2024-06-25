@@ -109,6 +109,9 @@ Ubidots as well as Azure (free for 12 months if you are a student)
 Why azure? I study .net and it is very integrated with that tech stack. Also possible to use the service for free for up to 12 months (a certain amount of credit is provided) if you apply for it with school email.
 [Azure](https://azure.microsoft.com/sv-se)
 
+# Try it!
+Click here to write to the bot. Click on the menu to see available commands.
+# picture of telegram chat here
 # Final thoughts
 
 
