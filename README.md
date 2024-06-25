@@ -1,5 +1,5 @@
 # The IoT Temperature Observer 
-## Kimmo Ahola (ka223pd)
+Author: Kimmo Ahola (ka223pd)
 Give a short and brief overview of what your project is about. What needs to be included:
 
 - [x] Title
@@ -7,6 +7,7 @@ Give a short and brief overview of what your project is about. What needs to be 
 - [ ] Short project overview
 - [ ] How much time it might take to do (approximation)
 
+# Introduction
 This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402).
 The purpose of this project has been to create a simple endpoint that I can place somewhere and have it collect data. Users can interact with this controller by using a telegram app (some functionality is not available for everyone at the moment, like subscriber).
 
@@ -84,6 +85,7 @@ Pymakr
 https://fritzing.org/
 
 # Code snippets
+Below are shortened code snippets to give an example of how the microcontroller can be used to read messages from a telegram chat bot and send data to the ubidots api. To view the full code, please check the python files in the repository.
 
 ### boot.py
 ```python=
