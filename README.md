@@ -5,20 +5,20 @@ Give a short and brief overview of what your project is about. What needs to be 
 - [x] Title
 - [x] Your name and student credentials (ka223pd)
 - [ ] Short project overview
-- [ ] How much time it might take to do (approximation)
+- [x] How much time it might take to do (approximation)
 
 # Introduction
 This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402).
 The purpose of this project has been to create a simple endpoint that I can place somewhere and have it collect data. Users can interact with this controller by using a telegram app (some functionality is not available for everyone at the moment, like subscriber).
 
 Since this course had a focus on microcontrollers/IoT and python the instructions will go in depth for those parts. 
-The .NET api part is part of the code base and link to tools will be provided but will not be covered otherwise.
+A .NET api part is part of the code base and links to tools will be provided for the curious but the code will not be covered in this project.
 
-Current implementation: one microcontroller that reads values from different sensors and saves to a database. A telegram bot is connected to this microcontroller and users can, if they want to, request selected live data from the microcontroller.
+Current implementation: one microcontroller that reads values from different sensors and saves to a database. A telegram bot is connected to this microcontroller and users can, if they want to, request selected live data from the microcontroller. Since this project is aimed for beginners all code will be run on the microcontroller itself and the bot will utilize HTTP Requests to fetch/send data.
 
 Future ideas: implement more sensors and create a smart home. Want to create a network of sensors and visualize the data on a personal website. Want to receive triggers on my phone through a telegram bot/phone app whenever a trigger event happens.
 
-How much time it may take: 6-10 depending on experience (for the python part only).
+How much time it may take: 6-10 hours depending on experience (for the python part only).
 
 # Introduction - tutorial on how to....
 # Objective
