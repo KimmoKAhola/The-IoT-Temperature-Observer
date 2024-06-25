@@ -57,24 +57,32 @@ Material: Breadboard, Raspberry pi pico, jumper cables, USB cable
 
 # Setup
 
-Chosen IDE/Editor - VSCode, Rider for the .net api.
-Pymakr
+A table of options this project can be implemented in
 
-[VSCODE](https://code.visualstudio.com/)
-[Pymark](https://docs.pycom.io/gettingstarted/software/vscode/)
+| IDE/Editor | Pros/Cons |
+| :--- | :---|
+| [VSCODE](https://code.visualstudio.com/) | Used in this project. Is very extensible but can be overwhelming for a beginner. |
+| [Thonny](https://thonny.org/) | Very beginner friendly and lightweight |
+
+If VSCode is used the Pymakr plugin has to be installed as well.
+[Pymakr](https://docs.pycom.io/gettingstarted/software/vscode/)
 
 # place images here on how to find it in the vscode plugin store etc
 
-- [ ] Chosen IDE
+- [x] Chosen IDE
 - [ ] How the code is uploaded
 - [ ] Steps that you needed to do for your computer. Installation of Node.js, extra drivers, etc.
 
-[For the api](https://www.jetbrains.com/rider/)
 
 
-### chosen IDE/Editor
-### How the code is uploaded
-### Steps needed, installation etc
+### if you wish to implement the .net code
+
+If you want to implement the .net code in the repository I recommend using the Jetbrains Rider IDE or Visual Studio Community edition. VSCode can also be used but I would recommend a dedicated IDE.
+
+| IDE | Free? |
+| :---| :---|
+| [Rider](https://www.jetbrains.com/rider/) | Paid product or free educational license |
+| [Visual Studio Community edition](https://visualstudio.microsoft.com/vs/community/) | Yes |
 
 
 # Circuit Diagram
@@ -86,7 +94,12 @@ https://fritzing.org/
 
 # Code snippets
 Below are shortened code snippets to give an example of how the microcontroller can be used to read messages from a telegram chat bot and send data to the ubidots api. To view the full code, please check the python files in the repository.
+Click on the collapsed sections to view the code.
 
+<details>
+      
+<summary>Click to view wifi connection code</summary> 
+      
 ### boot.py
 ```python=
 import network
@@ -110,6 +123,12 @@ class Boot:
         print('\nConnected on {}'.format(ip))
         return ip
 ```
+
+</details>
+
+<details>
+<summary>Click to view configuration code</summary>      
+
 ### configuration.py
 ``` 
 python=
@@ -137,6 +156,12 @@ USERNAME="XXXXXXXXXX"
 PASSWORD="XXXXXXXXXX"
 ```
 
+</details>
+
+<details>
+      
+<summary>Click to view main program</summary>      
+
 ### main.py
 ```python=
 import time
@@ -155,14 +180,16 @@ led = Pin("LED", Pin.OUT)
 
 env_vars = variables.read_env_file('.env')
 
-TOKEN = env_vars.get('API_TOKEN')
 DEVICE_LABEL = "dashboard id"
 VARIABLE_LABEL = "XXXXX"
+
 LED_LABEL = "led_sensor"
+
 WIFI_SSID = env_vars.get('WIFI_SSID')
 WIFI_PASS = env_vars.get('WIFI_PASSWORD')
 DELAY = 10  # Delay in seconds
-DATABASE_DELAY = 60 # Delay for saving to database in seconds.
+
+TOKEN = env_vars.get('API_TOKEN')
 BOT_TOKEN = env_vars.get('BOT_TOKEN')
 
 DHT_PIN = 26 # pin 26 chosen for this sensor
@@ -197,6 +224,7 @@ def get_telegram_updates(offset=None):
 
 # method to handle commands written to the bot
 def process_telegram_messages(updates, token):
+
     for update in updates:
         message = update.get('message', {})
         text = message.get('text', '')
@@ -208,13 +236,14 @@ def process_telegram_messages(updates, token):
                 value = temp_sensor.read_temperature()
                 send_message(chat_id, f"Current temperature in Kimmo's room: {value} °C")
             except Exception as e:
-                print(f"Error reading temperature: {e}")
+                pass
 
         elif text.startswith('/dht_sensor'):
             try:
                 send_message(chat_id, f"{dht_val_1} {dht_val_2}")
             except Exception as e:
-                print(f"{e}")
+                pass
+
         elif text.startswith('/toggle_led'):
             try:
                 toggle_led()
@@ -224,12 +253,13 @@ def process_telegram_messages(updates, token):
                     status = "OFF"
                 send_message(chat_id, f"LED toggled {status}")
             except Exception as e:
-                print(f"Error toggling LED: {e}")
+                pass
+
         else:
             try:
                 send_message(chat_id, "Unknown command. Type /commands to see a list of available commands.")
             except Exception as e:
-                print(f"Error with the else: {e}")
+                pass
 
 
 def toggle_led():
@@ -237,12 +267,12 @@ def toggle_led():
     try:
         led_status = not led.value()
         led.value(led_status)
+
         # send data to the ubidots dashboard
         save.sendData(DEVICE_LABEL, LED_LABEL, int(led_status))
 
     except Exception as e:
         print(f"Error toggling LED: {e}")
-    print("Toggled LED to:", led_status)
 
 # function to send back a message to a user
 # read your bot token from the telegram app and keep it safe
@@ -255,7 +285,6 @@ def send_message(chat_id, text):
     headers = {
         'Content-Type': 'application/json'
     }
-    print("send message:", text)
     req = requests.post(url=url, headers=headers, json=payload)
     req.close()
 
@@ -290,7 +319,14 @@ while True:
     sleep(DELAY)
 ```
 
+</details>
+
+<details>
+      
+<summary>Click to view send data code</summary>      
+
 ### save_data.py
+
 ```python=
 def sendData(self, device, variable, value):
         try:
@@ -308,6 +344,9 @@ def sendData(self, device, variable, value):
         except:
             pass
 ```
+
+</details>
+
 
 # Connectivity
 
