@@ -98,7 +98,7 @@ Click on the collapsed sections to view the code.
 
 <details>
       
-<summary>Click to view wifi connection code</summary> 
+<summary>Connect to WIFI</summary> 
       
 ### boot.py
 ```python=
@@ -127,7 +127,7 @@ class Boot:
 </details>
 
 <details>
-<summary>Click to view configuration code</summary>      
+<summary>Read sensitive/hidden variables</summary>      
 
 ### configuration.py
 ``` 
@@ -146,21 +146,45 @@ class Configuration:
                     env_vars[key] = value
         return env_vars
 ```
-### .env file containing sensitive information
+### .env file containing sensitive information. Remember to add .env to your gitignore!
 ``` .env
-WIFI_PASS="XXXXXXXXXX"
-WIFI_SSID="XXXXXXXXXX"
-BOT_TOKEN="XXXXXXXXXX"
-API_TOKEN="XXXXXXXXXX"
-USERNAME="XXXXXXXXXX"
-PASSWORD="XXXXXXXXXX"
+WIFI_SSID="this is your wifi id"
+WIFI_PASS="this is your wifi password"
+BOT_TOKEN="This is the telegram bot token"
+API_TOKEN="This is the ubidots token"
 ```
 
 </details>
 
 <details>
       
-<summary>Click to view main program</summary>      
+<summary>Save data to ubidots</summary>      
+
+### save_data.py
+
+```python=
+def sendData(self, device, variable, value):
+        try:
+            url = "https://industrial.api.ubidots.com/"
+            url = url + "api/v1.6/devices/" + device
+            headers = {"X-Auth-Token": self.api_token, "Content-Type": "application/json"}
+            data = self.build_json(variable, value)
+
+            if data is not None:
+                print("senddata.py ok",data)
+                req = requests.post(url=url, headers=headers, json=data)
+                return req.json()
+            else:
+                pass
+        except:
+            pass
+```
+
+</details>
+
+<details>
+      
+<summary>The main loop</summary>      
 
 ### main.py
 ```python=
@@ -234,24 +258,14 @@ def process_telegram_messages(updates, token):
         if text.startswith('/temperature'):
             try:
                 value = temp_sensor.read_temperature()
-                send_message(chat_id, f"Current temperature in Kimmo's room: {value} °C")
+                send_message(chat_id, f"{value}")
             except Exception as e:
                 pass
 
         elif text.startswith('/dht_sensor'):
             try:
+                dht_val_1, dht_val_2 = dht_sensor.read_values()
                 send_message(chat_id, f"{dht_val_1} {dht_val_2}")
-            except Exception as e:
-                pass
-
-        elif text.startswith('/toggle_led'):
-            try:
-                toggle_led()
-                if led_status:
-                    status = "ON"
-                else:
-                    status = "OFF"
-                send_message(chat_id, f"LED toggled {status}")
             except Exception as e:
                 pass
 
@@ -317,32 +331,6 @@ while True:
         print(f"Error in main loop: {e}")
     # loop delay
     sleep(DELAY)
-```
-
-</details>
-
-<details>
-      
-<summary>Click to view send data code</summary>      
-
-### save_data.py
-
-```python=
-def sendData(self, device, variable, value):
-        try:
-            url = "https://industrial.api.ubidots.com/"
-            url = url + "api/v1.6/devices/" + device
-            headers = {"X-Auth-Token": self.api_token, "Content-Type": "application/json"}
-            data = self.build_json(variable, value)
-
-            if data is not None:
-                print("senddata.py ok",data)
-                req = requests.post(url=url, headers=headers, json=data)
-                return req.json()
-            else:
-                pass
-        except:
-            pass
 ```
 
 </details>
