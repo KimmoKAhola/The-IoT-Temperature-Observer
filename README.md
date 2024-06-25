@@ -409,6 +409,8 @@ cons: needlessly high resolution. Currently 2-3 datapoints are saved per minutes
 # Data Visualization/presentation
 
 - [ ] Provide visual examples on how the dashboard looks. Pictures needed.
+
+# CHANGE ME CHANGE ME CHANGE ME!!!
 Dashboard: ![myimage-alt-tag](https://raw.githubusercontent.com/KimmoKAhola/The-IoT-Temperature-Observer/master/pictures/lnu-dashboard.png)
 - [ ] How often is data saved in the database.
 - [ ] *Explain your choice of database.
@@ -419,6 +421,7 @@ Ubidots as well as Azure (free for 12 months if you are a student)
 
 ## Ubidots Dashboard
 [Public Dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
+
 ## Swagger API
 This is an endpoint to fetch my saved sensor data. Use the GUI to click on the topmost option, /PlantData/Temperature, and click on execute to view the data. Note that some of the options are protected.
 [API](https://plantobserverapi.azurewebsites.net/swagger/index.html)
@@ -430,21 +433,17 @@ Why azure? I study .net and it is very integrated with that tech stack. Also pos
 [Azure](https://azure.microsoft.com/sv-se)
 
 # Try it!
-Click here to write to the bot. Click on the menu to see available commands.
-# picture of telegram chat here
-# Final thoughts
-
-
-- [ ] Show final results of the project
-- [ ] Pictures
-
-
-## API
-https://plantobserverapi.azurewebsites.net/swagger/index.html
-
 ## Telegram chat bot
-Interact with it if you want to. If the microcontroller is live you will receive a response within 20 seconds.
+Interact with it if you want to and have a telegram account. If the microcontroller is live you will receive a response within 20 seconds.
 
 https://t.me/PlantObserverBot
 
+This is an example of responses your bot might have.
+<p align="center">
+      <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-example-response.png">
+</p>
 
+# Final thoughts
+
+- [ ] Show final results of the project
+- [ ] Pictures
