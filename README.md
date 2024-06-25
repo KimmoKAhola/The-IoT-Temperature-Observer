@@ -13,7 +13,7 @@ The purpose of this project has been to create a simple endpoint that I can plac
 
 The future goals of this project is to build my own database and api services by combining the microcontrollers with .net APIs (I study to become a .NET Developer) and as such this codebase contains free to use code for .NET services as well. This will later be used to implement my own smart home (I hope).
 
-Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on those parts. Links to tools used for the .NET code will be provided and simple python snippets on how to send data to these services will also be shown. The C# code and database design will however not be covered at all.
+Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on those parts. Links to tools used for the .NET code will be provided and simple python snippets on how to send data to these services will also be shown. The C# code and database design will however not be covered at all but feel free to contact me in swedish or english if you want more information.
 
 The telegram bot code will also be kept beginner friendly and utilize HTTP requests to fetch/send data. This is not a scalable solution but will work fine for personal use.
 
@@ -22,6 +22,7 @@ Time required to implement this project yourself: 6-10 hours depending on experi
 # Objective
 
 Describe why you have chosen to build this specific device. What purpose does it serve? What do you want to do with the data, and what new insights do you think it will give?
+
 
 - [ ] Why you chose the project
 - [ ] What purpose does it serve
@@ -61,11 +62,27 @@ Firmware for micropython can be found here. Put this on your microcontroller by 
 
 ### How to upload code to the microcontroller
 
-in VSCODE do this....
+## VS Code instructions
 
-in Thonny do this...
+1. Install the pymakr extension
+<p align="center">
+      <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/pymakr-install.png">
+</p>
 
-### How to setup your telegram bot
+2. Connect to your plugged in device
+<p align="center">
+      <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/vscode-connect.png">
+</p>
+
+3. Select the .py file you wish to upload
+<p align="center">
+      <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/vscode-connect-2.png">
+</p>
+
+## Thonny instructions
+
+
+## How to setup your telegram bot
 
 To get your own telegram bot, please click on this link and follow the instructions: https://telegram.me/BotFather.
 
@@ -74,21 +91,22 @@ It will look something like this
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-bot-instructions.png" alt="telegram-bot-instructions">
 </p>
 
-1. Click on the link to open the chat.
-2. Store the api key in your .env file and keep it secret.
-3. You now have your own telegram bot to send notifications to yourself or your friends!
+1. Click on the link you received from the bot to open the bot chat and interact with it.
+2. Store the api key you received from the Botfather in your .env file and keep it secret.
+3. You now have your own telegram bot to send notifications to yourself and your friends!
+4. See the code section to get a code snippet you can use to get started.
 
-### Tools needed to implement the .NET API
+## Tools needed to implement the .NET API
 
 If you want to implement the .net code in the repository I recommend using the Jetbrains Rider IDE or Visual Studio Community edition. 
-
-
+     
 | IDE | Free? |
-| :---| :---|
+| :---| :--- |
 | [Rider](https://www.jetbrains.com/rider/) | Paid product or free educational license |
 | [Visual Studio Community edition](https://visualstudio.microsoft.com/vs/community/) | Yes |
+| [VS Code C# instructions](https://code.visualstudio.com/docs/languages/csharp) | Yes, but I do not recommend VS Code for this purpose. |
 
-VSCode can also be used but I would recommend a dedicated IDE. Please follow [these instructions](https://code.visualstudio.com/docs/languages/csharp) to use .NET in VSCode.
+Entity Framework Core has been used as the ORM of choice and SQL Server is the selected database provider. You will need to install the relevant nuget packages.
 
 # Circuit Diagram
 
@@ -194,15 +212,18 @@ def sendData(self, device, variable, value):
 ```
 def send_to_api(self, temperature):
         # this assumes that you have your own azure web service
-        url = f'https://YOURAZUREPROGRAM.azurewebsites.net/'
+        url = f'https://{YOUR_AZURE_PROGRAM}.azurewebsites.net/{YOUR_END_POINT}'
+
+        # you might want to implement authorization
         headers = {
             'Content-Type': 'application/json'
         }
         data = {
-            "temperature" : float(temperature)
+            "temperature" : temperature
         }
-        print(data)
+        
         try:
+            # use post to save it to a database
             req = requests.post(url, headers=headers, json=data)
             if req.status_code == 200:
                 print("Save successful")
@@ -214,6 +235,83 @@ def send_to_api(self, temperature):
             if req:
                 req.close()
 ```      
+</details>
+
+<details>
+      
+<summary>Telegram bot code</summary>
+
+```python=
+# function to receive messages sent to the bot
+def get_telegram_updates(offset=None):
+    # put your bot token here
+    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
+    if offset is not None:
+        url += f'?offset={offset}'
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = json.loads(response.text)
+            return data.get('result', [])
+        else:
+            print(f"Failed to get updates: {response.status_code}")
+            return []
+    except Exception as e:
+        print(f"Exception in get_telegram_updates: {e}")
+        return []
+    finally:
+        if response:
+            response.close()
+
+# method to handle commands written to the bot
+def process_telegram_messages(updates):
+    # This will loop through all the unhandled messages the bot has received.
+    for update in updates:
+        # Get the user message from the json response
+        message = update.get('message', {})
+
+        # Extract the user command
+        text = message.get('text', '')
+
+        # Extract the chat_id from the json. Use this to send a message back
+        chat_id = message.get('chat', {}).get('id', '')
+
+        # Here you can handle all the commands you wish to use.
+        # The commands /temperature and /dht_sensor are provided here and will send back sensor readings to the user
+        if text.startswith('/temperature'):
+            try:
+                value = temp_sensor.read_temperature()
+                send_message(chat_id, f"{value}")
+            except Exception as e:
+                pass
+
+        elif text.startswith('/dht_sensor'):
+            try:
+                dht_val_1, dht_val_2 = dht_sensor.read_values() # temperature, humidity
+                send_message(chat_id, f"{dht_val_1} {dht_val_2}")
+            except Exception as e:
+                pass
+
+        else:
+            try:
+                send_message(chat_id, "Unknown command.")
+            except Exception as e:
+                pass
+
+# function to send back a message to a user
+def send_message(chat_id, text):
+    url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
+    data = {
+        'chat_id': chat_id,
+        'text': text
+    }
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    req = requests.post(url=url, headers=headers, json=data)
+    req.close()
+```
+
 </details>
 
 <details>
@@ -238,10 +336,10 @@ led = Pin("LED", Pin.OUT)
 
 env_vars = variables.read_env_file('.env')
 
-DEVICE_LABEL = "dashboard id"
-VARIABLE_LABEL = "XXXXX"
-
-LED_LABEL = "led_sensor"
+DEVICE_LABEL = "XXXXXX"
+VARIABLE_LABEL = "XXXXXX"
+VARIABLE_LABEL_DHT_1 = "XXXXXX"
+VARIABLE_LABEL_DHT_2 = "XXXXXX"
 
 WIFI_SSID = env_vars.get('WIFI_SSID')
 WIFI_PASS = env_vars.get('WIFI_PASSWORD')
@@ -254,75 +352,12 @@ DHT_PIN = 26 # pin 26 chosen for this sensor
 TEMP_PIN = 27 # pin 27 for this sensor
 
 # use the constructors for the sensors
+# see the python classes for these sensors
 dht_sensor = DHTSensor(DHT_PIN)
 temp_sensor = TemperatureSensor(TEMP_PIN)
 
 # save to dashboard. Token is api token found on the ubidots api credential page.
 save = SaveData(TOKEN)
-
-# function to receive messages sent to the bot
-def get_telegram_updates(offset=None):
-    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
-    if offset is not None:
-        url += f'?offset={offset}'
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = json.loads(response.text)
-            return data.get('result', [])
-        else:
-            print(f"Failed to get updates: {response.status_code}")
-            return []
-    except Exception as e:
-        print(f"Exception in get_telegram_updates: {e}")
-        return []
-    finally:
-        if response:
-            response.close()
-
-# method to handle commands written to the bot
-def process_telegram_messages(updates):
-
-    for update in updates:
-        message = update.get('message', {})
-        text = message.get('text', '')
-        chat_id = message.get('chat', {}).get('id', '')
-        name = message.get('chat', {}).get('first_name')
-
-        if text.startswith('/temperature'):
-            try:
-                value = temp_sensor.read_temperature()
-                send_message(chat_id, f"{value}")
-            except Exception as e:
-                pass
-
-        elif text.startswith('/dht_sensor'):
-            try:
-                dht_val_1, dht_val_2 = dht_sensor.read_values()
-                send_message(chat_id, f"{dht_val_1} {dht_val_2}")
-            except Exception as e:
-                pass
-
-        else:
-            try:
-                send_message(chat_id, "Unknown command. Type /commands to see a list of available commands.")
-            except Exception as e:
-                pass
-
-# function to send back a message to a user
-# fetch your bot token from the telegram app and keep it safe
-def send_message(chat_id, text):
-    url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
-    payload = {
-        'chat_id': chat_id,
-        'text': text
-    }
-    headers = {
-        'Content-Type': 'application/json'
-    }
-    req = requests.post(url=url, headers=headers, json=payload)
-    req.close()
-
 
 # Initialize WIFI connection
 Boot.connect(WIFI_SSID, WIFI_PASS)
@@ -332,6 +367,7 @@ last_update_id = None
 while True:
     # read temperature from the temp sensor
     value = temp_sensor.read_temperature()
+
     # Here you could add a trigger to notify yourself
     # if value > 30:
     #       send_message(YOUR_CHAT_ID, "The temperature is over 30 degrees. Drink some water!")
@@ -341,7 +377,8 @@ while True:
 
     # send data to the dashboard
     save.sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
-
+    save.sendData(DEVICE_LABEL, VARIABLE_LABEL_DHT_1, dht_val_1)
+    save.sendData(DEVICE_LABEL, VARIABLE_LABEL_DHT_2, dht_val_2)
     # check for new bot messages
     try:
         updates = get_telegram_updates(offset=last_update_id)
@@ -382,9 +419,14 @@ Ubidots as well as Azure (free for 12 months if you are a student)
 
 ## Ubidots Dashboard
 [Public Dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
+## Swagger API
+This is an endpoint to fetch my saved sensor data. Use the GUI to click on the topmost option, /PlantData/Temperature, and click on execute to view the data. Note that some of the options are protected.
 [API](https://plantobserverapi.azurewebsites.net/swagger/index.html)
+
+You can also view this to get the JSON data directly [JSON](https://plantobserverapi.azurewebsites.net/PlantData/Temperature)
+
 ## Azure SQL server
-Why azure? I study .net and it is very integrated with that tech stack. Also possible to use the service for free for up to 12 months (a certain amount of credit is provided) if you apply for it with school email.
+Why azure? I study .net and it is very integrated with that tech stack. Also possible to use the service for free for up to 12 months if you apply for it with school email.
 [Azure](https://azure.microsoft.com/sv-se)
 
 # Try it!
