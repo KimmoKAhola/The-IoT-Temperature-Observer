@@ -46,32 +46,36 @@ Material: Breadboard, Raspberry pi pico, jumper cables, USB cable
 | Product | Quantity | Link  | Price (SEK) | Description |
 | :---         |     ---:       |          :--- | ---: | :--- |
 | Raspberry Pi Pico WH   | 1     | [electrokit](https://www.electrokit.com/raspberry-pi-pico-wh)    | 109 | The brain |
-| USB cable | 1 | [electrokit](https://www.electrokit.com/usb-kabel-a-hane-micro-b-5p-hane-1.8m) | 39 | Connect the Pico to a computer and power it |
+| USB-kabel A-hane - micro B hane 1.8m | 1 | [electrokit](https://www.electrokit.com/usb-kabel-a-hane-micro-b-5p-hane-1.8m) | 39 | Connect the Pico to a computer and power it |
 | Kopplingsdäck 840 anslutningar      | 1       | [electrokit](https://www.electrokit.com/kopplingsdack-840-anslutningar)      | 69 | A board to connect sensors and the microcontroller |
-| Connecting Cables  | 1 | [electrokit](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) | 29 | Connect the sensors to the controller |
-| DHT 11 Temperature and Humidity Sensor | 1 | [electrokit](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | 49 | Measure temperature and humidity (Accuracy: -1) |
-| MCP9700 Temperature Sensor | 1 | [electrokit](https://www.electrokit.com/mcp9700-to-92-temperaturgivare) | 12 | Measure temperature (Accuracy: -1) |
+| Labbsladd 20-pin 15cm hane/hane  | 1 | [electrokit](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) | 29 | Connect the sensors to the controller |
+| Digital temperatur- och fuktsensor DHT11 | 1 | [electrokit](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | 49 | Measure temperature and humidity (Accuracy: -1) |
+| MCP9700 TO-92 Temperaturgivare | 1 | [electrokit](https://www.electrokit.com/mcp9700-to-92-temperaturgivare) | 12 | Measure temperature (Accuracy: -1) |
 | Total price | | | -2000 |
 
 
 
 # Setup
 
-A table of options this project can be implemented in
+To connect your raspberry pi pico wh to your computer and upload code to it the following editors are recommended.
 
-| IDE/Editor | Pros/Cons |
+| Editor | Pros/Cons |
 | :--- | :---|
-| [VSCODE](https://code.visualstudio.com/) | Used in this project. Is very extensible but can be overwhelming for a beginner. |
+| [VSCODE](https://code.visualstudio.com/) | Used in this project. It is very extensible but can be overwhelming for a beginner. |
 | [Thonny](https://thonny.org/) | Very beginner friendly and lightweight |
 
 If VSCode is used the Pymakr plugin has to be installed as well.
 [Pymakr](https://docs.pycom.io/gettingstarted/software/vscode/)
+Firmware for micropython can be found here
+[MicroPython Firmware](https://micropython.org/download/)
 
-# place images here on how to find it in the vscode plugin store etc
+### How to upload code to the microcontroller
 
-- [x] Chosen IDE
-- [ ] How the code is uploaded
-- [ ] Steps that you needed to do for your computer. Installation of Node.js, extra drivers, etc.
+in VSCODE do this....
+
+in Thonny do this...
+
+### How to setup your telegram bot
 
 To get your own telegram bot, please click on this link and follow the instructions: https://telegram.me/BotFather.
 
@@ -80,15 +84,17 @@ It will look something like this
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-bot-instructions.png" alt="telegram-bot-instructions">
 </p>
 
-### if you wish to implement the .net code
+### Tools needed to implement the .NET API
 
-If you want to implement the .net code in the repository I recommend using the Jetbrains Rider IDE or Visual Studio Community edition. VSCode can also be used but I would recommend a dedicated IDE.
+If you want to implement the .net code in the repository I recommend using the Jetbrains Rider IDE or Visual Studio Community edition. 
+
 
 | IDE | Free? |
 | :---| :---|
 | [Rider](https://www.jetbrains.com/rider/) | Paid product or free educational license |
 | [Visual Studio Community edition](https://visualstudio.microsoft.com/vs/community/) | Yes |
 
+VSCode can also be used but I would recommend a dedicated IDE. Please follow [these instructions](https://code.visualstudio.com/docs/languages/csharp) to use .NET in VSCode.
 
 # Circuit Diagram
 
