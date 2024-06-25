@@ -108,8 +108,8 @@ class Boot:
         print('\nConnected on {}'.format(ip))
         return ip
 ```
-
-``` configuration.py
+### configuration.py
+``` 
 python=
 # Use this to read variables from an .env file
 class Configuration:
@@ -125,12 +125,14 @@ class Configuration:
                     env_vars[key] = value
         return env_vars
 ```
-
+### .env file containing sensitive information
 ``` .env
 WIFI_PASS="XXXXXXXXXX"
 WIFI_SSID="XXXXXXXXXX"
 BOT_TOKEN="XXXXXXXXXX"
 API_TOKEN="XXXXXXXXXX"
+USERNAME="XXXXXXXXXX"
+PASSWORD="XXXXXXXXXX"
 ```
 
 ### main.py
@@ -152,37 +154,26 @@ led = Pin("LED", Pin.OUT)
 env_vars = variables.read_env_file('.env')
 
 TOKEN = env_vars.get('API_TOKEN')
-DEVICE_LABEL = "Test"
-VARIABLE_LABEL = "sensor"
+DEVICE_LABEL = "dashboard id"
+VARIABLE_LABEL = "XXXXX"
 LED_LABEL = "led_sensor"
 WIFI_SSID = env_vars.get('WIFI_SSID')
 WIFI_PASS = env_vars.get('WIFI_PASSWORD')
 DELAY = 10  # Delay in seconds
 DATABASE_DELAY = 60 # Delay for saving to database in seconds.
 BOT_TOKEN = env_vars.get('BOT_TOKEN')
-SENSOR_ID = Boot.get_sensor_id()
 
-DECIMAL_PRECISION = 1 # Round to 1 decimal for all values
-UPPER_BOUND_16_BIT = 65535 # 2^16-1
-UPPER_BOUND_8_BIT = 255 # 2^8-1
-LOWER_BOUND_8_BIT = 0
+DHT_PIN = 26 # pin 26 chosen for this sensor
+TEMP_PIN = 27 # pin 27 for this sensor
 
-RED_PIN = 18
-BLUE_PIN = 17
-GREEN_PIN = 16
-DHT_PIN = 26
-TEMP_PIN = 27
-USERNAME = env_vars.get('USERNAME')
-PASSWORD = env_vars.get('PASSWORD')
-
-red_pwm = PWM(Pin(RED_PIN))
-blue_pwm = PWM(Pin(BLUE_PIN))
-green_pwm = PWM(Pin(GREEN_PIN))
-
+# use the constructors for the sensors
 dht_sensor = DHTSensor(DHT_PIN)
 temp_sensor = TemperatureSensor(TEMP_PIN)
+
+# save to dashboard. Token is api token found on the ubidots api credential page.
 save = SaveData(TOKEN)
 
+# function to receive messages sent to the bot
 def get_telegram_updates(offset=None):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/getUpdates'
     if offset is not None:
@@ -202,52 +193,13 @@ def get_telegram_updates(offset=None):
         if response:
             response.close()
 
-def add_user_to_database(name, chat_id, content, token):
-    print("start", name)
-    url = f'https://plantobserverapi.azurewebsites.net/PlantData/PostMessage'
-    headers = {
-        'Content-Type' : "application/json",
-        'Authorization': f'Bearer {token}'
-    }
-    data = {
-        'firstName' : f"{name}",
-        'userChatId' : f"{chat_id}",
-        'content' : f"{content}"
-    }
-    print(data)
-    try:
-        response = requests.post(url=url, headers=headers, json=data)
-        if response.status_code == 200:
-            print("ok")
-        else:
-            print(f"{response.status_code}")
-    except Exception as e:
-        print(e)
-    finally:
-        if response:
-            response.close()
-
+# method to handle commands written to the bot
 def process_telegram_messages(updates, token):
-    processed_messages = []
     for update in updates:
         message = update.get('message', {})
         text = message.get('text', '')
         chat_id = message.get('chat', {}).get('id', '')
         name = message.get('chat', {}).get('first_name')
-
-        # remove bad characters from name. Very hacky way to do it
-        temp_name = ""
-        for char in name:
-            if char.isalpha():
-                temp_name += char
-        name = temp_name
-
-        if chat_id in processed_messages:
-            send_message(chat_id, "You have spammed too much, please calm down. Your messages have been ignored.")
-            continue
-
-        processed_messages.append(chat_id)
-        add_user_to_database(name, chat_id, text, token)
 
         if text.startswith('/temperature'):
             try:
@@ -256,36 +208,11 @@ def process_telegram_messages(updates, token):
             except Exception as e:
                 print(f"Error reading temperature: {e}")
 
-        elif text.startswith('/commands'):
-            try:
-                send_message(chat_id, "/temperature\n/all_data\n/dht_sensor\n/toggle_led\n")
-            except Exception as e:
-                print(e)
-        elif text.startswith('/all_data'):
-            try:
-                send_message(chat_id, f"Temp: {value} C, Temp 2: {dht_val_1} C, Humidity: {dht_val_2} %")
-            except Exception as e:
-                print(f"{e}")
-
         elif text.startswith('/dht_sensor'):
             try:
                 send_message(chat_id, f"{dht_val_1} {dht_val_2}")
             except Exception as e:
                 print(f"{e}")
-        elif text.startswith('/subscribe'):
-            try:
-                result = save.update_subscriber_status(chat_id, True, token=token)
-                if result:
-                    send_message(chat_id, "You are now subscribed.")
-            except Exception as e:
-                print(e)
-        elif text.startswith('/unsubscribe'):
-            try:
-                result = save.update_subscriber_status(chat_id, False, token=token)
-                if result:
-                    send_message(chat_id, "You are now unsubscribed.")
-            except Exception as e:
-                print(e)
         elif text.startswith('/toggle_led'):
             try:
                 toggle_led()
@@ -296,17 +223,6 @@ def process_telegram_messages(updates, token):
                 send_message(chat_id, f"LED toggled {status}")
             except Exception as e:
                 print(f"Error toggling LED: {e}")
-        
-        elif text.startswith('/masoud'):
-            try:
-                send_message(chat_id, "MASOUD")
-            except Exception as e:
-                print(f"Error with masoud: {e}")
-        elif text.startswith('/help'):
-            try:
-                send_message(chat_id, "help")
-            except Exception as e:
-                print(f"{e}")
         else:
             try:
                 send_message(chat_id, "Unknown command. Type /commands to see a list of available commands.")
@@ -319,12 +235,15 @@ def toggle_led():
     try:
         led_status = not led.value()
         led.value(led_status)
+        # send data to the ubidots dashboard
         save.sendData(DEVICE_LABEL, LED_LABEL, int(led_status))
 
     except Exception as e:
         print(f"Error toggling LED: {e}")
     print("Toggled LED to:", led_status)
 
+# function to send back a message to a user
+# read your bot token from the telegram app and keep it safe
 def send_message(chat_id, text):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
     payload = {
@@ -339,17 +258,24 @@ def send_message(chat_id, text):
     req.close()
 
 
+# Initialize WIFI connection
 Boot.connect(WIFI_SSID, WIFI_PASS)
 
 last_update_id = None
-current_time = time.time()
 
 while True:
+    # token for saving to my own database
     token = save.get_token(USERNAME, PASSWORD)
+    # read temperature from the temp sensor
     value = temp_sensor.read_temperature()
+    # read temperature and humidity from the DHT 11 sensor
     dht_val_1, dht_val_2 = dht_sensor.read_values()
+    # save to my own database
     save.send_to_api(token=token, temperature=value, dht_temperature=dht_val_1, dht_humidity=dht_val_2, sensor_id=SENSOR_ID)
+    # send data to the dashboard
     save.sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
+
+    # check for new bot messages
     try:
         updates = get_telegram_updates(offset=last_update_id)
         if updates:
@@ -358,8 +284,7 @@ while True:
 
     except Exception as e:
         print(f"Error in main loop: {e}")
-    """
-    """
+    # loop delay
     sleep(DELAY)
 ```
 
