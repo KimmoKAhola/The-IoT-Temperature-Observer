@@ -8,7 +8,10 @@ Give a short and brief overview of what your project is about. What needs to be 
 - [ ] How much time it might take to do (approximation)
 
 This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402).
-The purpose of this project has been to create a simple endpoint that I can place somewhere in my apartment and have it collect data. Users can interact with this controller by using a telegram app (some functionality is not available for everyone at the moment, like subscriber).
+The purpose of this project has been to create a simple endpoint that I can place somewhere and have it collect data. Users can interact with this controller by using a telegram app (some functionality is not available for everyone at the moment, like subscriber).
+
+Since this course had a focus on microcontrollers/IoT and python the instructions will go in depth for those parts. 
+The .NET api part is part of the code base and link to tools will be provided but will not be covered otherwise.
 
 Current implementation: one microcontroller that reads values from different sensors and saves to a database. A telegram bot is connected to this microcontroller and users can, if they want to, request selected live data from the microcontroller.
 
@@ -97,11 +100,13 @@ https://fritzing.org/
 - [ ] Describe platform in terms of functionality
 - [ ] *Explain and elaborate what made you choose this platform
 Ubidots as well as Azure (free for 12 months if you are a student)
+
 ## Ubidots Dashboard
-https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE
+[Public Dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
+[API](https://plantobserverapi.azurewebsites.net/swagger/index.html)
 ## Azure SQL server
 Why azure? I study .net and it is very integrated with that tech stack. Also possible to use the service for free for up to 12 months (a certain amount of credit is provided) if you apply for it with school email.
-https://azure.microsoft.com/sv-se
+[Azure](https://azure.microsoft.com/sv-se)
 
 # Final thoughts
 
