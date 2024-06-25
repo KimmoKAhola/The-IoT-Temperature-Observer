@@ -1,5 +1,32 @@
+# TODO
+- [ ] Implement circuit diagram
+- [ ] Good pictures of the project
+- [ ] Good looking dashboard
+- [ ] Thonny instructions
+- [ ] Double-check the code snippets, clean them if needed.
+
 # The IoT Temperature Observer 
 Author: Kimmo Ahola (ka223pd)
+
+# Table of Contents
+
+1. [Introduction](#introduction)
+2. [Objective](#objective)
+3. [Materials](#materials-needed)
+4. [Setup](#setup)
+   1. [VS Code](#vs-code-instructions)
+   2. [Thonny](#thonny-instructions)
+   3. [Telegram bot](#how-to-setup-your-telegram-bot)
+   4. [.NET API](#tools-needed-to-implement-the-net-api)
+6. [Circuit Diagram](#circuit-diagram)
+7. [Code Snippets](#code-snippets)
+8. [Connectivity](#connectivity)
+9. [Data Visualization](#data-visualizationpresentation)
+    1. [Ubidots](#ubidots-dashboard)
+    2. [Swagger API](#swagger-api)
+    3. [Azure](#azure-sql-server)
+10. [Try it!](#try-it)
+11. [Final thoughts](#final-thoughts)
 
 - [x] Title
 - [x] Your name and student credentials (ka223pd)
@@ -81,6 +108,7 @@ Firmware for micropython can be found here. Put this on your microcontroller by 
 
 ## Thonny instructions
 
+### Will be implemented soon.
 
 ## How to setup your telegram bot
 
@@ -397,28 +425,34 @@ while True:
 
 # Connectivity
 
-- [ ] How often is the data sent?
-## Currently everything is written as a continuous loop without any asynchronous methods. A simple sleep delay of 10 seconds is used in the main loop. With all the delays of saving/fetching from api and database this turns out to be 2-3 calls per minute.
-- [ ] Which wireless protocols did you use (WiFi, LoRa, etc …)?
+- [x] How often is the data sent?
+The main loop in the code has a 10 second delay. Since the code is written synchronously it means that due to all the delays of calling the different API:s this delay turns out to be closer to 20-25 seconds. This is gives a good balance between datapoints from the sensors and response speed in the chat. It is possible to write the code asynchronously and solve this issue of code blocking, but since I plan on moving the bot away from the microcontroller to a dedicated server in the future it is unnecessary to rewrite the code right now.
+
+- [x] Which wireless protocols did you use (WiFi, LoRa, etc …)?
 ## WIFI. Why? 100 % uptime, fast response time etc.
-cons: needlessly high resolution. Currently 2-3 datapoints are saved per minutes which is unneccessarily high. This will be changed in the future.
-- [ ] Which transport protocols were used (MQTT, webhook, etc …)
-## webhook? HTTP requests, post, get, patch
-- [ ] *Elaborate on the design choices regarding data transmission and wireless protocols. That is how your choices affect the device range and battery consumption.
+Currently WIFI is used as the wireless protocol. As the code for the chat bot is run on the board itself constant uptime is needed to have good response speed. When the code for the chat bot is moved to another service another, more efficient protocol, will be used.
+
+HTTP requests are used to transfer data. JSON, post, get, patch etc
 
 # Data Visualization/presentation
 
 - [ ] Provide visual examples on how the dashboard looks. Pictures needed.
+
+# CHANGE ME CHANGE ME CHANGE ME!!!
 Dashboard: ![myimage-alt-tag](https://raw.githubusercontent.com/KimmoKAhola/The-IoT-Temperature-Observer/master/pictures/lnu-dashboard.png)
-- [ ] How often is data saved in the database.
-- [ ] *Explain your choice of database.
+- [x] How often is data saved in the database.
+About 2-3 times per minute for the sensor data table. Users and user messages are saved to their tables whenever the bot reads the messages.
+- [x] *Explain your choice of database.
+Ubidots is a convenient low code solution to quickly give a good looking visual representation. Since I plan to move away from this in the future and utilize something else I save the data permanently to a SQL Server hosted on Azure. This choice is based on Azure's heavy integration with the .NET framework and the fact that it is possible to use it for free for up to 12 months with a student account (that's how they get you hooked...).
 - [ ] *Automation/triggers of the data.
+The bot gets triggered whenever there are new unhandled messages.
 - [ ] Describe platform in terms of functionality
-- [ ] *Explain and elaborate what made you choose this platform
+- [x] *Explain and elaborate what made you choose this platform
 Ubidots as well as Azure (free for 12 months if you are a student)
 
 ## Ubidots Dashboard
 [Public Dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
+
 ## Swagger API
 This is an endpoint to fetch my saved sensor data. Use the GUI to click on the topmost option, /PlantData/Temperature, and click on execute to view the data. Note that some of the options are protected.
 [API](https://plantobserverapi.azurewebsites.net/swagger/index.html)
@@ -430,21 +464,17 @@ Why azure? I study .net and it is very integrated with that tech stack. Also pos
 [Azure](https://azure.microsoft.com/sv-se)
 
 # Try it!
-Click here to write to the bot. Click on the menu to see available commands.
-# picture of telegram chat here
-# Final thoughts
-
-
-- [ ] Show final results of the project
-- [ ] Pictures
-
-
-## API
-https://plantobserverapi.azurewebsites.net/swagger/index.html
-
 ## Telegram chat bot
-Interact with it if you want to. If the microcontroller is live you will receive a response within 20 seconds.
+Interact with it if you want to and have a telegram account. If the microcontroller is live you will receive a response within 20 seconds.
 
 https://t.me/PlantObserverBot
 
+This is an example of responses your bot might have.
+<p align="center">
+      <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-example-response.png">
+</p>
 
+# Final thoughts
+
+- [ ] Show final results of the project
+- [ ] Pictures
