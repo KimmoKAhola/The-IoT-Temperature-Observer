@@ -1,6 +1,16 @@
 # The IoT Temperature Observer 
 Author: Kimmo Ahola (ka223pd)
 
+1. [Introduction](#introduction)
+2. [Objective](#objective)
+3. [Materials](#materials-needed)
+4. [Setup](#setup)
+   1. [VS Code](#vs-code-instructions)
+   2. [Thonny](#thonny-instructions)
+   3. [Telegram bot](#how-to-setup-your-telegram-bot)
+   4. [.NET API](#tools-needed-to-implement-the-net-api)
+6. [Circuit Diagram](#circuit-diagram)
+
 - [x] Title
 - [x] Your name and student credentials (ka223pd)
 - [ ] Short project overview
@@ -81,6 +91,7 @@ Firmware for micropython can be found here. Put this on your microcontroller by 
 
 ## Thonny instructions
 
+### Will be implemented soon.
 
 ## How to setup your telegram bot
 
