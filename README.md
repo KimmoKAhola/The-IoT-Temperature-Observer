@@ -8,17 +8,17 @@ Give a short and brief overview of what your project is about. What needs to be 
 - [x] How much time it might take to do (approximation)
 
 # Introduction
+
 This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402).
 The purpose of this project has been to create a simple endpoint that I can place somewhere and have it collect data. Users can interact with this controller by using a telegram bot and writing certain commands to it.
 
-Since this course had a focus on microcontrollers/IoT and python the instructions will go in depth for those parts. 
-A .NET api part is part of the code base and links to tools will be provided for the curious but the code will not be covered in this project.
+The future goals of this project is to build my own database and api services by combining the microcontrollers with .net APIs (I study to become a .NET Developer) and as such this codebase contains free to use code for .NET services as well. This will later be used to implement my own smart home (I hope).
+
+Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus will be on those parts. Links to tools used for the .NET code will be provided and python snippets on how to send data to these services will also be shown. The C# code and database design will however not be covered at all.
 
 Current implementation: one microcontroller that reads values from different sensors and saves to a database. A telegram bot is connected to this microcontroller and users can, if they want to, request selected live data from the microcontroller. Since this project is aimed for beginners all code will be run on the microcontroller itself and the bot will utilize HTTP Requests to fetch/send data.
 
-Future ideas: implement more sensors and create a smart home. Want to create a network of sensors and visualize the data on a personal website. Want to receive triggers on my phone through a telegram bot/phone app whenever a trigger event happens.
-
-How much time it may take: 6-10 hours depending on experience (for the python part only).
+Time required to implement this project yourself: 6-10 hours depending on experience (for the python part only).
 
 # Introduction - tutorial on how to....
 # Objective
@@ -61,12 +61,13 @@ To connect your raspberry pi pico wh to your computer and upload code to it the 
 
 | Editor | Pros/Cons |
 | :--- | :---|
-| [VSCODE](https://code.visualstudio.com/) | Used in this project. It is very extensible but can be overwhelming for a beginner. |
-| [Thonny](https://thonny.org/) | Very beginner friendly and lightweight |
+| [VS Code](https://code.visualstudio.com/) | Used in this project. It is very extensible but can be overwhelming for a beginner. |
+| [Thonny](https://thonny.org/) | Very beginner friendly and lightweight. Lacks a lot of features that VS Code has. |
 
-If VSCode is used the Pymakr plugin has to be installed as well.
+If VS Code is used the Pymakr plugin has to be installed as well.
 [Pymakr](https://docs.pycom.io/gettingstarted/software/vscode/)
-Firmware for micropython can be found here
+
+Firmware for micropython can be found here. Put this on your microcontroller by pressing the BOOTSEL button while connecting the controller to a computer.
 [MicroPython Firmware](https://micropython.org/download/)
 
 ### How to upload code to the microcontroller
@@ -83,6 +84,7 @@ It will look something like this
 <p align="center">
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-bot-instructions.png" alt="telegram-bot-instructions">
 </p>
+You now have your own telegram bot to send notifications to yourself or your friends!
 
 ### Tools needed to implement the .NET API
 
@@ -141,8 +143,7 @@ class Boot:
 <summary>Read sensitive/hidden variables</summary>      
 
 ### configuration.py
-``` 
-python=
+```python=
 # Use this to read variables from an .env file
 class Configuration:
     @staticmethod
@@ -163,6 +164,7 @@ WIFI_SSID="this is your wifi id"
 WIFI_PASS="this is your wifi password"
 BOT_TOKEN="This is the telegram bot token"
 API_TOKEN="This is the ubidots token"
+YOUR_TELEGRAM_CHAT_ID="This is your saved telegram ID"
 ```
 
 </details>
