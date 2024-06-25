@@ -1,6 +1,8 @@
 # The IoT Temperature Observer 
 Author: Kimmo Ahola (ka223pd)
 
+# Table of Contents
+
 1. [Introduction](#introduction)
 2. [Objective](#objective)
 3. [Materials](#materials-needed)
