@@ -39,19 +39,20 @@ Sensors used in this example: DHT_11 (temp + humidity). Analogue temperature sen
 Material: Breadboard, Raspberry pi pico, jumper cables, USB cable
 
 - [ ] List of material
-      
-| Product | Quantity | Link  | Price (SEK) |
-| :---         |     ---:       |          :--- | ---: |
-| Raspberry Pi Pico WH   | 1     | [electrokit](https://www.electrokit.com/raspberry-pi-pico-wh)    | 109 |
-| Kopplingsdäck 840 anslutningar      | 1       | [electrokit](https://www.electrokit.com/kopplingsdack-840-anslutningar)      | 69 |
-| jumper cables | 1 | [electrokit](smth) | -1 |
-| DHT 11 | 1 | [electrokit](link) | -1 |
-| temp sensor | 1 | [electrokit](link) | - 1 |
-| Total price | | | -2000 |
-
 - [ ] What the different things (sensors, wires, controllers) do - short specifications
 - [ ] Where you bought them and how much they cost
-- [ ] Create a table of BoM here
+      
+| Product | Quantity | Link  | Price (SEK) | Description |
+| :---         |     ---:       |          :--- | ---: | :--- |
+| Raspberry Pi Pico WH   | 1     | [electrokit](https://www.electrokit.com/raspberry-pi-pico-wh)    | 109 | The brain |
+| USB cable | 1 | [electrokit](https://www.electrokit.com/usb-kabel-a-hane-micro-b-5p-hane-1.8m) | 39 | Connect the Pico to a computer and power it |
+| Kopplingsdäck 840 anslutningar      | 1       | [electrokit](https://www.electrokit.com/kopplingsdack-840-anslutningar)      | 69 | A board to connect sensors and the microcontroller |
+| Connecting Cables  | 1 | [electrokit](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) | 29 | Connect the sensors to the controller |
+| DHT 11 Temperature and Humidity Sensor | 1 | [electrokit](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | 49 | Measure temperature and humidity (Accuracy: -1) |
+| MCP9700 Temperature Sensor | 1 | [electrokit](https://www.electrokit.com/mcp9700-to-92-temperaturgivare) | 12 | Measure temperature (Accuracy: -1) |
+| Total price | | | -2000 |
+
+
 
 # Setup
 
