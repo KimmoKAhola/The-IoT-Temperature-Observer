@@ -12,10 +12,9 @@ An IoT project for the course 24ST - 1DT305 at LNU (https://lnu-ftk.instructure.
 
 Current implementation: one microcontroller that reads values from different sensors and saves to a database. A telegram bot is connected to this microcontroller and users can, if they want to, request selected live data from the microcontroller.
 
-Future ideas: implement more sensors and create a smart home.
+Future ideas: implement more sensors and create a smart home. Want to create a network of sensors and visualize the data on a personal website. Want to receive triggers on my phone through a telegram bot/phone app whenever a trigger event happens.
 
 # Introduction - tutorial on how to....
-
 # Objective
 
 I want to create a sensor network. This is a tutorial to build the first sensor and save information to a database
@@ -35,6 +34,16 @@ Sensors used in this example: DHT_11 (temp + humidity). Analogue temperature sen
 Material: Breadboard, Raspberry pi pico, jumper cables, USB cable
 
 - [ ] List of material
+      
+| Product | Quantity | Link  | Price (SEK) |
+| :---         |     ---:       |          :--- | ---: |
+| Raspberry Pi Pico WH   | 1     | [electrokit](https://www.electrokit.com/raspberry-pi-pico-wh)    | 109 |
+| Kopplingsdäck 840 anslutningar      | 1       | [electrokit](https://www.electrokit.com/kopplingsdack-840-anslutningar)      | 69 |
+| jumper cables | 1 | [electrokit](smth) | -1 |
+| DHT 11 | 1 | [electrokit](link) | -1 |
+| temp sensor | 1 | [electrokit](link) | - 1 |
+| SUM | | | -2000 |
+
 - [ ] What the different things (sensors, wires, controllers) do - short specifications
 - [ ] Where you bought them and how much they cost
 - [ ] Create a table of BoM here
