@@ -247,7 +247,7 @@ def get_telegram_updates(offset=None):
             response.close()
 
 # method to handle commands written to the bot
-def process_telegram_messages(updates, token):
+def process_telegram_messages(updates):
 
     for update in updates:
         message = update.get('message', {})
@@ -275,21 +275,8 @@ def process_telegram_messages(updates, token):
             except Exception as e:
                 pass
 
-
-def toggle_led():
-    global led_status
-    try:
-        led_status = not led.value()
-        led.value(led_status)
-
-        # send data to the ubidots dashboard
-        save.sendData(DEVICE_LABEL, LED_LABEL, int(led_status))
-
-    except Exception as e:
-        print(f"Error toggling LED: {e}")
-
 # function to send back a message to a user
-# read your bot token from the telegram app and keep it safe
+# fetch your bot token from the telegram app and keep it safe
 def send_message(chat_id, text):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
     payload = {
@@ -309,14 +296,11 @@ Boot.connect(WIFI_SSID, WIFI_PASS)
 last_update_id = None
 
 while True:
-    # token for saving to my own database
-    token = save.get_token(USERNAME, PASSWORD)
     # read temperature from the temp sensor
     value = temp_sensor.read_temperature()
+
     # read temperature and humidity from the DHT 11 sensor
     dht_val_1, dht_val_2 = dht_sensor.read_values()
-    # save to my own database
-    save.send_to_api(token=token, temperature=value, dht_temperature=dht_val_1, dht_humidity=dht_val_2, sensor_id=SENSOR_ID)
     # send data to the dashboard
     save.sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
 
