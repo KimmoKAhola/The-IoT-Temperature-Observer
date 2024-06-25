@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace PlantAPI.Models;
+namespace PlantAPI.Models.Sensor;
 
 public class PlantDataDTO
 {

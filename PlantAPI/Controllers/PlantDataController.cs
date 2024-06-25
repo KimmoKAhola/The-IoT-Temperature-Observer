@@ -6,7 +6,11 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PlantAPI.Data;
 using PlantAPI.Models;
+using PlantAPI.Models.Message;
+using PlantAPI.Models.Sensor;
+using PlantAPI.Models.User;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PlantAPI.Controllers;
@@ -56,17 +60,6 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
     }
 
     /// <summary>
-    /// Test method description.
-    /// </summary>
-    /// <param name="id">The identifier parameter.</param>
-    /// <returns>The HTTP response result.</returns>
-    [HttpGet]
-    public async Task<IActionResult> Test(int? id)
-    {
-        return null;
-    }
-
-    /// <summary>
     /// Updates the user information in the plant database.
     /// </summary>
     /// <param name="id">The identifier of the user to be updated.</param>
@@ -105,6 +98,11 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
         return BadRequest();
     }
 
+    /// <summary>
+    /// Updates plant data in the plant database.
+    /// </summary>
+    /// <param name="model">The PlantDataDTO object containing the updated data.</param>
+    /// <returns>An IActionResult representing the result of the operation.</returns>
     [Authorize]
     [HttpPost("post")]
     public async Task<IActionResult> Put(PlantDataDTO model)
@@ -140,13 +138,17 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
         return StatusCode(401, "Unauthorized");
     }
 
+    /// <summary>
+    /// Retrieves the list of users from the plant database.
+    /// </summary>
+    /// <returns>A collection of strings representing the names of the users.</returns>
     [HttpGet("User")]
     public async Task<IActionResult> GetUsers()
     {
         try
         {
             var res = await context.Users.ToListAsync();
-            var users = res.Select(x => "Name: " + x.FirstName);
+            var users = res.Select(x => "First initial of name: " + x.FirstName[0]);
             return Ok(users);
         }
         catch (Exception e)
@@ -157,6 +159,11 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
         return BadRequest();
     }
 
+    /// <summary>
+    /// Updates the plant data in the plant database.
+    /// </summary>
+    /// <param name="model">The PlantDataDTO object containing the plant data to be updated.</param>
+    /// <returns>An IActionResult indicating the success or failure of the update operation.</returns>
     [HttpPost("PostMessage")]
     [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
@@ -206,6 +213,12 @@ public class PlantDataController(PlantContext context, IConfiguration configurat
         return StatusCode(401, "Unauthorized");
     }
 
+    /// <summary>
+    /// Generates a token based on the provided user credentials.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="password">The password.</param>
+    /// <returns>The generated JWT token if the user credentials match; otherwise, an empty string.</returns>
     [HttpPost("token")]
     public string Token(string user, string password)
     {

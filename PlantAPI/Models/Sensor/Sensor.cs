@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PlantAPI.Models;
+namespace PlantAPI.Models.Sensor;
 
 public class Sensor
 {

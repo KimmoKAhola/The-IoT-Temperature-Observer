@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PlantAPI;
+using PlantAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PlantAPI.Models;
+using PlantAPI.Models.Sensor;
+using PlantAPI.Models.User;
 
-namespace PlantAPI;
+namespace PlantAPI.Data;
 
 public class PlantContext : DbContext
 {

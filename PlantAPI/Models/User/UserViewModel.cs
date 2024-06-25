@@ -1,4 +1,4 @@
-﻿namespace PlantAPI.Models;
+﻿namespace PlantAPI.Models.User;
 
 public record UserViewModel
 {

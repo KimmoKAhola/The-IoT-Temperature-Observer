@@ -1,4 +1,4 @@
-﻿namespace PlantAPI.Models;
+﻿namespace PlantAPI.Models.Sensor;
 
 public record SensorData
 {

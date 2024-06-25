@@ -8,7 +8,7 @@ from boot import Boot
 from configuration import Configuration as variables
 from temperature_sensor import TemperatureSensor
 from save_data import SaveData
-from temp import DHT_Sensor as DHTSensor
+from dht_sensor import DHT_Sensor as DHTSensor
 
 led = Pin("LED", Pin.OUT)
 
