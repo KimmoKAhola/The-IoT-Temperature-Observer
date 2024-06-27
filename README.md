@@ -3,7 +3,7 @@
 - [ ] Good pictures of the project
 - [ ] Better looking dashboard
 - [ ] Thonny instructions
-- [ ] Double-check the code snippets, clean them if needed.
+- [x] Double-check the code snippets, clean them if needed.
 
 # The IoT Temperature Observer 
 Author: Kimmo Ahola (ka223pd)
@@ -364,8 +364,9 @@ This is an example of responses your bot might have.
 
 # Final thoughts
 
-- [ ] Show final results of the project
-- [ ] Pictures
+- [x] Show final results of the project
+- [x] Pictures
+- [ ] Better pictures
 
 ## Add pictures here
 
