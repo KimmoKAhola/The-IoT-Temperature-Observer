@@ -67,15 +67,15 @@ Insights: ? Think about this.
 - [x] Add sum of all material
 - [ ] change price and sum to the rightmost column
       
-| Product | Quantity | Link  | Price (SEK) | Description |
-| :---         |     ---:       |          :--- | ---: | :--- |
-| Raspberry Pi Pico WH   | 1     | [electrokit](https://www.electrokit.com/raspberry-pi-pico-wh)    | 109 | The brain |
-| USB-kabel A-hane - micro B hane 1.8m | 1 | [electrokit](https://www.electrokit.com/usb-kabel-a-hane-micro-b-5p-hane-1.8m) | 39 | Connect the Pico to a computer and power it |
-| Kopplingsdäck 840 anslutningar      | 1       | [electrokit](https://www.electrokit.com/kopplingsdack-840-anslutningar)      | 69 | A board to connect sensors and the microcontroller |
-| Labbsladd 20-pin 15cm hane/hane  | 1 | [electrokit](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) | 29 | Connect the sensors to the controller |
-| Digital temperatur- och fuktsensor DHT11 | 1 | [electrokit](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | 49 | Measure temperature and humidity (Accuracy: -1) |
-| MCP9700 TO-92 Temperaturgivare | 1 | [electrokit](https://www.electrokit.com/mcp9700-to-92-temperaturgivare) | 12 | Measure temperature (Accuracy: -1) |
-| Total price | | | 307 |
+| Product | Quantity | Link  | Description | Price (SEK) |
+| :---         |     ---:       | :--- | :--- | ---: |
+| Raspberry Pi Pico WH   | 1     | [Electrokit](https://www.electrokit.com/raspberry-pi-pico-wh) | The main part of the project. The "brain". | 109 |
+| USB cable A-male - microB-male 1.8m  | 1 | [Electrokit](https://www.electrokit.com/usb-kabel-a-hane-micro-b-5p-hane-1.8m) | Connect the Pico to a computer and power it | 39 |
+| Solderless Breadboard 840 tie-points       | 1       | [Electrokit](https://www.electrokit.com/kopplingsdack-840-anslutningar) | A board to connect sensors and the microcontroller |69 |
+| Jumper wires 20-pin 30cm male/male   | 1 | [Electrokit](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) | Connect the sensors to the controller | 29 |
+| Digital temperature and humidity sensor DHT11 | 1 | [Electrokit](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) |  Measure temperature and humidity (Accuracy: ±2℃, ±5％RH) |49 |
+| MCP9700 TO-92 Temperaturgivare | 1 | [Electrokit](https://www.electrokit.com/mcp9700-to-92-temperaturgivare) | Measure temperature (Accuracy: ±2°C) | 12 |
+| Total price | | | | 307|
 
 # Setup
 
@@ -119,7 +119,7 @@ Firmware for micropython can be found here. Put this on your microcontroller by 
 
 To get your own telegram bot you will need a telegram account. Click on this link and follow the instructions to create your own bot: https://telegram.me/BotFather.
 
-It will look something like this:
+The procedure will look something like this:
 <p align="center">
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-bot-instructions.png" alt="telegram-bot-instructions">
 </p>
@@ -330,14 +330,14 @@ HTTP requests are used to transfer data. JSON, post, get, patch etc
 - [ ] Future plans for visualization
 
 # CHANGE ME CHANGE ME CHANGE ME!!!
-Dashboard: ![myimage-alt-tag](https://raw.githubusercontent.com/KimmoKAhola/The-IoT-Temperature-Observer/master/pictures/lnu-dashboard.png)
+## Ubidots Dashboard
+[Public Dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
+
+Dashboard: ![myimage-alt-tag](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/ubidots-temp-dashboard-picture.png)
 About 2-3 times per minute for the sensor data table. Users and user messages are saved to their tables whenever the bot reads the messages.
 Ubidots is a convenient low code solution to quickly give a good looking visual representation. Since I plan to move away from this in the future and utilize something else I save the data permanently to a SQL Server hosted on Azure. This choice is based on Azure's heavy integration with the .NET framework and the fact that it is possible to use it for free for up to 12 months with a student account (that's how they get you hooked...).
 The bot gets triggered whenever there are new unhandled messages.
 Ubidots as well as Azure (free for 12 months if you are a student)
-
-## Ubidots Dashboard
-[Public Dashboard](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/ubidots-temp-dashboard-picture.png)
 
 ## Swagger API
 This is an endpoint to fetch my saved sensor data. Use the GUI to click on the topmost option, /PlantData/Temperature, and click on execute to view the data. Note that some of the options are protected.
