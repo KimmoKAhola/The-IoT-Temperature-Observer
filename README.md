@@ -1,7 +1,7 @@
 # TODO
 - [ ] Implement circuit diagram
 - [ ] Good pictures of the project
-- [ ] Good looking dashboard
+- [ ] Better looking dashboard
 - [ ] Thonny instructions
 - [ ] Double-check the code snippets, clean them if needed.
 
@@ -65,7 +65,7 @@ Insights: ? Think about this.
 - [x] What the different things (sensors, wires, controllers) do - short specifications
 - [x] Where you bought them and how much they cost
 - [x] Add sum of all material
-- [ ] change price and sum to the rightmost column
+- [x] change price and sum to the rightmost column
       
 | Product | Quantity | Link  | Description | Price (SEK) |
 | :---         |     ---:       | :--- | :--- | ---: |
@@ -331,7 +331,7 @@ HTTP requests are used to transfer data. JSON, post, get, patch etc
 
 # CHANGE ME CHANGE ME CHANGE ME!!!
 ## Ubidots Dashboard
-[Public Dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
+[Link to the public Ubidots dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
 
 Dashboard: ![myimage-alt-tag](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/ubidots-temp-dashboard-picture.png)
 About 2-3 times per minute for the sensor data table. Users and user messages are saved to their tables whenever the bot reads the messages.
@@ -368,3 +368,5 @@ This is an example of responses your bot might have.
 - [ ] Pictures
 
 ## Add pictures here
+
+![temp pic](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/temp-project-picture.jpg)
