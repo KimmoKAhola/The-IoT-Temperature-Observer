@@ -50,22 +50,22 @@ Time required to implement this project yourself: 6-10 hours depending on experi
 
 # Objective
 
-Describe why you have chosen to build this specific device. What purpose does it serve? What do you want to do with the data, and what new insights do you think it will give?
-
-
-- [ ] Why you chose the project
-- [ ] What purpose does it serve
+- [x] Why you chose the project
+- [x] What purpose does it serve
 - [ ] What insights you think it will give
 
-I chose this project to lay the foundation to a larger project, sort of a proof of concept. The idea behind it is to give me a deepened understanding for microcontrollers.
+I chose this project to lay the foundation to a larger project, sort of a proof of concept. The idea behind it is to give me a deepened understanding for microcontrollers, python and coding in general.
 I want to give friends & family small sensors to use at home to measure something and collect the data in a personal database and use that info for some visualization/calculation.
+
+Insights: ? Think about this.
 
 # Materials needed
 
 - [x] List of material
 - [x] What the different things (sensors, wires, controllers) do - short specifications
 - [x] Where you bought them and how much they cost
-- [ ] Add sum of all material
+- [x] Add sum of all material
+- [ ] change price and sum to the rightmost column
       
 | Product | Quantity | Link  | Price (SEK) | Description |
 | :---         |     ---:       |          :--- | ---: | :--- |
@@ -75,7 +75,7 @@ I want to give friends & family small sensors to use at home to measure somethin
 | Labbsladd 20-pin 15cm hane/hane  | 1 | [electrokit](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) | 29 | Connect the sensors to the controller |
 | Digital temperatur- och fuktsensor DHT11 | 1 | [electrokit](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) | 49 | Measure temperature and humidity (Accuracy: -1) |
 | MCP9700 TO-92 Temperaturgivare | 1 | [electrokit](https://www.electrokit.com/mcp9700-to-92-temperaturgivare) | 12 | Measure temperature (Accuracy: -1) |
-| Total price | | | -2000 |
+| Total price | | | 307 |
 
 # Setup
 
@@ -117,9 +117,9 @@ Firmware for micropython can be found here. Put this on your microcontroller by 
 
 ## How to setup your telegram bot
 
-To get your own telegram bot, please click on this link and follow the instructions: https://telegram.me/BotFather.
+To get your own telegram bot you will need a telegram account. Click on this link and follow the instructions to create your own bot: https://telegram.me/BotFather.
 
-It will look something like this
+It will look something like this:
 <p align="center">
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-bot-instructions.png" alt="telegram-bot-instructions">
 </p>
@@ -183,71 +183,14 @@ class Boot:
 </details>
 
 <details>
-<summary>Read sensitive/hidden variables</summary>      
-
-### configuration.py
-```python=
-# Use this to read variables from an .env file
-class Configuration:
-    @staticmethod
-    def read_env_file(file_path):
-        env_vars = {}
-        with open(file_path) as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith('#'):
-                    key, value = line.split('=', 1)
-                    value = value.strip('"')
-                    env_vars[key] = value
-        return env_vars
-```
-### .env file containing sensitive information. Remember to add .env to your gitignore!
-``` .env
-WIFI_SSID="this is your wifi id"
-WIFI_PASS="this is your wifi password"
-BOT_TOKEN="This is the telegram bot token"
-API_TOKEN="This is the ubidots token"
-YOUR_TELEGRAM_CHAT_ID="This is your saved telegram ID"
-```
-
-</details>
-
-<details>
       
-<summary>Save data to ubidots</summary>      
-
-### save_data.py
-
-```python=
-def sendData(self, device, variable, value):
-        try:
-            url = "https://industrial.api.ubidots.com/"
-            url = url + "api/v1.6/devices/" + device
-            headers = {"X-Auth-Token": self.api_token, "Content-Type": "application/json"}
-            data = self.build_json(variable, value)
-
-            if data is not None:
-                print("senddata.py ok",data)
-                req = requests.post(url=url, headers=headers, json=data)
-                return req.json()
-            else:
-                pass
-        except:
-            pass
-```
-
-</details>
-
-<details>
-      
-<summary>Save data to Azure</summary>
+<summary>Save data to your own database through azure api</summary>
 
 ```
 def send_to_api(self, temperature):
         # this assumes that you have your own azure web service
         url = f'https://{YOUR_AZURE_PROGRAM}.azurewebsites.net/{YOUR_END_POINT}'
 
-        # you might want to implement authorization
         headers = {
             'Content-Type': 'application/json'
         }
@@ -272,7 +215,7 @@ def send_to_api(self, temperature):
 
 <details>
       
-<summary>Telegram bot code</summary>
+<summary>Telegram bot code, using HTTP requests</summary>
 
 ```python=
 # function to receive messages sent to the bot
@@ -310,26 +253,11 @@ def process_telegram_messages(updates):
         chat_id = message.get('chat', {}).get('id', '')
 
         # Here you can handle all the commands you wish to use.
-        # The commands /temperature and /dht_sensor are provided here and will send back sensor readings to the user
+        # The command /temperature is used to send reading back to a the user.
         if text.startswith('/temperature'):
-            try:
-                value = temp_sensor.read_temperature()
-                send_message(chat_id, f"{value}")
-            except Exception as e:
-                pass
 
-        elif text.startswith('/dht_sensor'):
-            try:
-                dht_val_1, dht_val_2 = dht_sensor.read_values() # temperature, humidity
-                send_message(chat_id, f"{dht_val_1} {dht_val_2}")
-            except Exception as e:
-                pass
-
-        else:
-            try:
-                send_message(chat_id, "Unknown command.")
-            except Exception as e:
-                pass
+        value = temp_sensor.read_temperature()
+        send_message(chat_id, f"{value}")
 
 # function to send back a message to a user
 def send_message(chat_id, text):
@@ -353,65 +281,18 @@ def send_message(chat_id, text):
 
 ### main.py
 ```python=
-import time
-from machine import Pin, PWM
-import machine
-import urequests as requests
-from time import sleep
-import json
-from boot import Boot
-from configuration import Configuration as variables
-from temperature_sensor import TemperatureSensor
-from save_data import SaveData
-from temp import DHT_Sensor as DHTSensor
-
-led = Pin("LED", Pin.OUT)
-
-env_vars = variables.read_env_file('.env')
-
-DEVICE_LABEL = "XXXXXX"
-VARIABLE_LABEL = "XXXXXX"
-VARIABLE_LABEL_DHT_1 = "XXXXXX"
-VARIABLE_LABEL_DHT_2 = "XXXXXX"
-
-WIFI_SSID = env_vars.get('WIFI_SSID')
-WIFI_PASS = env_vars.get('WIFI_PASSWORD')
-DELAY = 10  # Delay in seconds
-
-TOKEN = env_vars.get('API_TOKEN')
-BOT_TOKEN = env_vars.get('BOT_TOKEN')
-
-DHT_PIN = 26 # pin 26 chosen for this sensor
-TEMP_PIN = 27 # pin 27 for this sensor
-
-# use the constructors for the sensors
-# see the python classes for these sensors
-dht_sensor = DHTSensor(DHT_PIN)
-temp_sensor = TemperatureSensor(TEMP_PIN)
-
-# save to dashboard. Token is api token found on the ubidots api credential page.
-save = SaveData(TOKEN)
-
-# Initialize WIFI connection
-Boot.connect(WIFI_SSID, WIFI_PASS)
+# add necessary imports
 
 last_update_id = None
 
 while True:
-    # read temperature from the temp sensor
-    value = temp_sensor.read_temperature()
+    # read temperature from a sensor
+    value = sensor.read_temperature()
 
     # Here you could add a trigger to notify yourself
     # if value > 30:
     #       send_message(YOUR_CHAT_ID, "The temperature is over 30 degrees. Drink some water!")
 
-    # read temperature and humidity from the DHT 11 sensor
-    dht_val_1, dht_val_2 = dht_sensor.read_values()
-
-    # send data to the dashboard
-    save.sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
-    save.sendData(DEVICE_LABEL, VARIABLE_LABEL_DHT_1, dht_val_1)
-    save.sendData(DEVICE_LABEL, VARIABLE_LABEL_DHT_2, dht_val_2)
     # check for new bot messages
     try:
         updates = get_telegram_updates(offset=last_update_id)
@@ -427,36 +308,36 @@ while True:
 
 </details>
 
-
 # Connectivity
 
+- [x] Which wireless protocols did you use (WiFi, LoRa, etc …)?
 - [x] How often is the data sent?
+
 The main loop in the code has a 10 second delay. Since the code is written synchronously it means that due to all the delays of calling the different API:s this delay turns out to be closer to 20-25 seconds. This is gives a good balance between datapoints from the sensors and response speed in the chat. It is possible to write the code asynchronously and solve this issue of code blocking, but since I plan on moving the bot away from the microcontroller to a dedicated server in the future it is unnecessary to rewrite the code right now.
 
-- [x] Which wireless protocols did you use (WiFi, LoRa, etc …)?
-## WIFI. Why? 100 % uptime, fast response time etc.
-Currently WIFI is used as the wireless protocol. As the code for the chat bot is run on the board itself constant uptime is needed to have good response speed. When the code for the chat bot is moved to another service another, more efficient protocol, will be used.
+Currently WIFI is used as the wireless protocol. As the code for the chat bot is run on the board itself constant uptime is needed to have good response speed. When the code for the chat bot is moved to another service another, more energy efficient, protocol will be used.
 
 HTTP requests are used to transfer data. JSON, post, get, patch etc
 
 # Data Visualization/presentation
 
-- [ ] Provide visual examples on how the dashboard looks. Pictures needed.
+- [x] Provide visual examples on how the dashboard looks. Pictures needed.
+- [x] How often is data saved in the database.
+- [x] *Explain your choice of database.
+- [x] *Automation/triggers of the data.
+- [x] *Explain and elaborate what made you choose this platform
+- [ ] Describe platform in terms of functionality
+- [ ] Future plans for visualization
 
 # CHANGE ME CHANGE ME CHANGE ME!!!
 Dashboard: ![myimage-alt-tag](https://raw.githubusercontent.com/KimmoKAhola/The-IoT-Temperature-Observer/master/pictures/lnu-dashboard.png)
-- [x] How often is data saved in the database.
 About 2-3 times per minute for the sensor data table. Users and user messages are saved to their tables whenever the bot reads the messages.
-- [x] *Explain your choice of database.
 Ubidots is a convenient low code solution to quickly give a good looking visual representation. Since I plan to move away from this in the future and utilize something else I save the data permanently to a SQL Server hosted on Azure. This choice is based on Azure's heavy integration with the .NET framework and the fact that it is possible to use it for free for up to 12 months with a student account (that's how they get you hooked...).
-- [ ] *Automation/triggers of the data.
 The bot gets triggered whenever there are new unhandled messages.
-- [ ] Describe platform in terms of functionality
-- [x] *Explain and elaborate what made you choose this platform
 Ubidots as well as Azure (free for 12 months if you are a student)
 
 ## Ubidots Dashboard
-[Public Dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
+[Public Dashboard](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/ubidots-temp-dashboard-picture.png)
 
 ## Swagger API
 This is an endpoint to fetch my saved sensor data. Use the GUI to click on the topmost option, /PlantData/Temperature, and click on execute to view the data. Note that some of the options are protected.
@@ -469,6 +350,8 @@ Why azure? I study .net and it is very integrated with that tech stack. Also pos
 [Azure](https://azure.microsoft.com/sv-se)
 
 # Try it!
+You have read through all this text. Wouldn't it be fun to try it?
+
 ## Telegram chat bot
 Interact with it if you want to and have a telegram account. If the microcontroller is live you will receive a response within 20 seconds.
 
@@ -483,3 +366,5 @@ This is an example of responses your bot might have.
 
 - [ ] Show final results of the project
 - [ ] Pictures
+
+## Add pictures here
