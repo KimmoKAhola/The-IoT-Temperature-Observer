@@ -35,12 +35,14 @@ Author: Kimmo Ahola (ka223pd)
 
 # Introduction
 
+[Github Repository](https://github.com/KimmoKAhola/The-IoT-Temperature-Observer)
+
 This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402).
 The purpose of this project has been to create a simple endpoint that I can place somewhere and have it collect data. Users can interact with this controller by using a telegram bot and writing certain commands to it.
 
 The future goals of this project is to build my own database and api services by combining the microcontrollers with .net APIs (I study to become a .NET Developer) and as such this codebase contains free to use code for .NET services as well. This will later be used to implement my own smart home (I hope).
 
-Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on those parts. Links to tools used for the .NET code will be provided and simple python snippets on how to send data to these services will also be shown. The C# code and database design will however not be covered at all but feel free to contact me in swedish or english if you want more information.
+Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on those parts. Links to tools used for the .NET code will be provided and simple python snippets on how to send data to these services will also be shown. The C# code is available in the repo but will not be covered at all.
 
 The telegram bot code will also be kept beginner friendly and utilize HTTP requests to fetch/send data. This is not a scalable solution but will work fine for personal use.
 
@@ -54,6 +56,9 @@ Describe why you have chosen to build this specific device. What purpose does it
 - [ ] Why you chose the project
 - [ ] What purpose does it serve
 - [ ] What insights you think it will give
+
+I chose this project to lay the foundation to a larger project, sort of a proof of concept. The idea behind it is to give me a deepened understanding for microcontrollers.
+I want to give friends & family small sensors to use at home to measure something and collect the data in a personal database and use that info for some visualization/calculation.
 
 # Materials needed
 
