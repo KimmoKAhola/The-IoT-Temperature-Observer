@@ -327,8 +327,7 @@ The data is sent to Ubidots roughly 2-3 times per minute.
 
 ## Azure SQL server
 [Azure](https://azure.microsoft.com/sv-se)
-To keep my data permanently I have chosen to use Azure services. This service has been chosen for several reasons: It is heavily integrated with my favorite tech stach at the moment (.NET), it has a 12 month free plan for students.
-
+To save my data permanently I have chosen to use a database on Azure services. This service has been chosen for several reasons: It is heavily integrated with my favorite tech stach at the moment (.NET), it has a 12 month free plan for students and is reasonably cheap to use when it is not free. The purpose of permanently saving the data is to ......
 
 # Try it!
 You have read through all of this text. Wouldn't it be fun to see the result?
@@ -353,3 +352,6 @@ You can also view this to get the JSON data directly [JSON](https://plantobserve
 
 ![temp pic](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/temp-project-picture.jpg)
 A better picture will be added for the final draft.
+
+
+## Write something about results and how I focused more on the software part of this project.
