@@ -7,7 +7,7 @@ Author: Kimmo Ahola (ka223pd)
 2. [Objective](#objective)
 3. [Materials](#materials-needed)
 4. [Setup](#setup)
-   1. [VS Code](#vs-code-instructions)
+   1. [VS Code](#upload-code-to-the-microcontroller-with-vs-code)
    2. [Telegram bot](#how-to-setup-your-telegram-bot)
    3. [.NET API](#tools-needed-to-implement-the-net-api)
 5. [Circuit Diagram](#circuit-diagram)
@@ -321,7 +321,7 @@ You can also view this to get the JSON data directly [JSON](https://plantobserve
 # Final thoughts
 
 ![temp pic](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/temp-project-picture.jpg)
-A better picture will be added for the final draft.
+_A better picture of the sensor setup will be added for the final draft._
 
 The focus of this project has mainly been on the software side instead of the hardware side. I focused more on laying the foundation for code and sensor expansion rather than on any advanced sensor readings or any advanced sensor functionality. This project uses two different temperature sensors of the cheaper kind. The sensors have an accuracy spread of ±2°C which is quite large but by using 2 different sensors perhaps a better reading could perhaps be obtained by using the mean value. For future projects it might be a better idea to use better sensors and receive accurate readings.
 
