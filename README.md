@@ -1,9 +1,7 @@
 # TODO
-- [ ] Implement circuit diagram
+- [x] Implement circuit diagram
 - [ ] Good pictures of the project
 - [ ] Better looking dashboard
-- [ ] Thonny instructions
-- [x] Double-check the code snippets, clean them if needed.
 
 # The IoT Temperature Observer 
 Author: Kimmo Ahola (ka223pd)
@@ -15,18 +13,17 @@ Author: Kimmo Ahola (ka223pd)
 3. [Materials](#materials-needed)
 4. [Setup](#setup)
    1. [VS Code](#vs-code-instructions)
-   2. [Thonny](#thonny-instructions)
-   3. [Telegram bot](#how-to-setup-your-telegram-bot)
-   4. [.NET API](#tools-needed-to-implement-the-net-api)
-6. [Circuit Diagram](#circuit-diagram)
-7. [Code Snippets](#code-snippets)
-8. [Connectivity](#connectivity)
-9. [Data Visualization](#data-visualizationpresentation)
+   2. [Telegram bot](#how-to-setup-your-telegram-bot)
+   3. [.NET API](#tools-needed-to-implement-the-net-api)
+5. [Circuit Diagram](#circuit-diagram)
+6. [Code Snippets](#code-snippets)
+7. [Connectivity](#connectivity)
+8. [Data Visualization](#data-visualizationpresentation)
     1. [Ubidots](#ubidots-dashboard)
     2. [Swagger API](#swagger-api)
     3. [Azure](#azure-sql-server)
-10. [Try it!](#try-it)
-11. [Final thoughts](#final-thoughts)
+9. [Try it!](#try-it)
+10. [Final thoughts](#final-thoughts)
 
 - [x] Title
 - [x] Your name and student credentials (ka223pd)
@@ -54,18 +51,12 @@ Time required to implement this project yourself: 6-10 hours depending on experi
 - [x] What purpose does it serve
 - [ ] What insights you think it will give
 
-I chose this project to lay the foundation to a larger project, sort of a proof of concept. The idea behind it is to give me a deepened understanding for microcontrollers, python and coding in general.
+I chose this project to lay the foundation to a larger personal project, sort of a proof of concept. The idea behind it is to give me a deepened understanding for microcontrollers, python and coding in general.
 I want to give friends & family small sensors to use at home to measure something and collect the data in a personal database and use that info for some visualization/calculation.
 
 Insights: ? Think about this.
 
 # Materials needed
-
-- [x] List of material
-- [x] What the different things (sensors, wires, controllers) do - short specifications
-- [x] Where you bought them and how much they cost
-- [x] Add sum of all material
-- [x] change price and sum to the rightmost column
       
 | Product | Quantity | Link  | Description | Price (SEK) |
 | :---         |     ---:       | :--- | :--- | ---: |
@@ -111,10 +102,6 @@ Firmware for micropython can be found here. Put this on your microcontroller by 
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/vscode-connect-2.png">
 </p>
 
-## Thonny instructions
-
-### Will be implemented soon.
-
 ## How to setup your telegram bot
 
 To get your own telegram bot you will need a telegram account. Click on this link and follow the instructions to create your own bot: https://telegram.me/BotFather.
@@ -143,10 +130,11 @@ Entity Framework Core has been used as the ORM of choice and SQL Server is the s
 
 # Circuit Diagram
 
-- [ ] Circuit diagram (can be hand drawn)
-- [ ] *Electrical calculations (higher grade)
-
-https://fritzing.org/
+- [x] Circuit diagram (can be hand drawn)
+      
+<p align="center">
+   <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/circuit-diagram.png">
+</p>
 
 # Code snippets
 Below are shortened code snippets to give an example of how the microcontroller can be used to read messages from a telegram chat bot and send data to the ubidots api. To view the full code, please check the python files in the repository.
@@ -315,7 +303,7 @@ while True:
 
 The main loop in the code has a 10 second delay. Since the code is written synchronously it means that due to all the delays of calling the different API:s this delay turns out to be closer to 20-25 seconds. This is gives a good balance between datapoints from the sensors and response speed in the chat. It is possible to write the code asynchronously and solve this issue of code blocking, but since I plan on moving the bot away from the microcontroller to a dedicated server in the future it is unnecessary to rewrite the code right now.
 
-Currently WIFI is used as the wireless protocol. As the code for the chat bot is run on the board itself constant uptime is needed to have good response speed. When the code for the chat bot is moved to another service another, more energy efficient, protocol will be used.
+Currently WIFI is used as the wireless protocol for simplicity. As the code for the chat bot is run on the board itself constant uptime is preferred to have good response speed. When the code for the chat bot is moved to another service another, more energy efficient, protocol will be used.
 
 HTTP requests are used to transfer data. JSON, post, get, patch etc
 
@@ -329,28 +317,21 @@ HTTP requests are used to transfer data. JSON, post, get, patch etc
 - [ ] Describe platform in terms of functionality
 - [ ] Future plans for visualization
 
-# CHANGE ME CHANGE ME CHANGE ME!!!
 ## Ubidots Dashboard
 [Link to the public Ubidots dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
 
 Dashboard: ![myimage-alt-tag](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/ubidots-temp-dashboard-picture.png)
-About 2-3 times per minute for the sensor data table. Users and user messages are saved to their tables whenever the bot reads the messages.
-Ubidots is a convenient low code solution to quickly give a good looking visual representation. Since I plan to move away from this in the future and utilize something else I save the data permanently to a SQL Server hosted on Azure. This choice is based on Azure's heavy integration with the .NET framework and the fact that it is possible to use it for free for up to 12 months with a student account (that's how they get you hooked...).
-The bot gets triggered whenever there are new unhandled messages.
-Ubidots as well as Azure (free for 12 months if you are a student)
+For visualization of the project the ubidots service has been used. The reason for choosing this project was mainly because of its ease of use. Within a few minutes and a few lines of code the project had a working dashboard that can be viewed by the public. This platform has a free license for students and saves the data for up to 1 month with a limitation on the number of datapoints per day/month. As this project was meant to be a proof of concept for a future project this solution worked perfectly fine for my goals.
 
-## Swagger API
-This is an endpoint to fetch my saved sensor data. Use the GUI to click on the topmost option, /PlantData/Temperature, and click on execute to view the data. Note that some of the options are protected.
-[API](https://plantobserverapi.azurewebsites.net/swagger/index.html)
-
-You can also view this to get the JSON data directly [JSON](https://plantobserverapi.azurewebsites.net/PlantData/Temperature)
+The data is sent to Ubidots roughly 2-3 times per minute.
 
 ## Azure SQL server
-Why azure? I study .net and it is very integrated with that tech stack. Also possible to use the service for free for up to 12 months if you apply for it with school email.
 [Azure](https://azure.microsoft.com/sv-se)
+To keep my data permanently I have chosen to use Azure services. This service has been chosen for several reasons: It is heavily integrated with my favorite tech stach at the moment (.NET), it has a 12 month free plan for students.
+
 
 # Try it!
-You have read through all this text. Wouldn't it be fun to try it?
+You have read through all of this text. Wouldn't it be fun to see the result?
 
 ## Telegram chat bot
 Interact with it if you want to and have a telegram account. If the microcontroller is live you will receive a response within 20 seconds.
@@ -362,12 +343,13 @@ This is an example of responses your bot might have.
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-example-response.png">
 </p>
 
+## Swagger API
+This is an endpoint to fetch my saved sensor data. Use the GUI to click on the topmost option, /PlantData/Temperature, and click on execute to view the data. Note that some of the options are protected.
+[API](https://plantobserverapi.azurewebsites.net/swagger/index.html)
+
+You can also view this to get the JSON data directly [JSON](https://plantobserverapi.azurewebsites.net/PlantData/Temperature)
+
 # Final thoughts
 
-- [x] Show final results of the project
-- [x] Pictures
-- [ ] Better pictures
-
-## Add pictures here
-
 ![temp pic](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/temp-project-picture.jpg)
+A better picture will be added for the final draft.
