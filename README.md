@@ -26,9 +26,7 @@ This repository serves as the code base for an IoT project for the summer course
 
 [Link to Github repository](https://github.com/KimmoKAhola/The-IoT-Temperature-Observer)
 
-The purpose of this project has been to create a simple sensor endpoint that I can place somewhere and collect data which is then saved to a database. Users can interact with this controller by using a telegram bot and receive live data from it.
-
-The future goals of this project is to expand on this idea and to implement more sensors in different parts of the country and build a larger sensor network for personal use.
+The purpose of this project has been to create a simple sensor endpoint that I can place somewhere and collect data which is then saved to a database. Users can interact with this controller by using a telegram bot and receive live data from it. The controller gets temperature and humidity readings from two different sensors. The future goals of this project is to expand on this idea and to implement more sensors in different parts of the country and build a larger sensor network for personal use.
 
 Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on python and raspberry pi pico wh. Links to the tools used for the .NET code will be provided and simple python code snippets on how to send data to these services will also be shown. The .NET code is available in the github repository but will not be covered in detail.
 
@@ -37,10 +35,8 @@ For the sake of simplicity the telegram bot will use HTTP requests to fetch/send
 Time required to implement this project yourself: 6-10 hours depending on experience.
 
 # Objective
-- [ ] What insights you think it will give
 
-I chose this project to lay the foundation to a larger personal project, sort of a proof of concept. The idea behind it is to give me a deepened understanding for microcontrollers, python and coding in general.
-
+I chose this project to lay the foundation to a larger personal project, sort of a proof of concept to see if it is possible to implement a larger sensor network for personal use. The idea behind the project is to give me a deepened understanding for microcontrollers, python and coding in general. I expect this project to give great insight into the different problems that has to be considered before implementing IoT, such as protocols and power usage.
 # Materials needed
       
 | Product | Quantity | Link  | Description | Price (SEK) |
@@ -285,9 +281,9 @@ while True:
 
 # Connectivity
 
-The main loop in the code has a 10 second delay. Since the code is written synchronously it means that due to all the delays of calling the different API:s this delay turns out to be closer to 20-25 seconds. This is gives a good balance between datapoints from the sensors and response speed in the chat. It is possible to write the code asynchronously and solve this issue of code blocking, but since I plan on moving the bot away from the microcontroller to a dedicated server in the future it is unnecessary to rewrite the code right now.
+The main loop in the code currently has a 10 second delay. Since the code is written synchronously it means that due to all the delays of calling the different API:s this delay turns out to be closer to 20-25 seconds. This is gives a good balance between datapoints from the sensors and response speed for the chat bot. It is possible to write the code asynchronously and solve this issue of code blocking, thereby reducing the delay for the bot responses, but since I plan on moving the bot away from the microcontroller to a dedicated server in the future it is unnecessary to rewrite the code right now.
 
-WIFI is used as the wireless protocol for simplicity. As the code for the chat bot is run on the board itself constant uptime is preferred to have good response speed. HTTP requests are used to transfer data to the different services for data visualization.
+WIFI is used as the wireless protocol for simplicity and HTTP requests are used to transfer data to the different services for data visualization.
 
 # Data Visualization/presentation
 
@@ -327,12 +323,14 @@ You can also view this to get the JSON data directly [JSON](https://plantobserve
 ![temp pic](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/temp-project-picture.jpg)
 A better picture will be added for the final draft.
 
-## Write something about results and how I focused more on the software part of this project.
+The focus of this project has mainly been on the software side instead of the hardware side. I focused more on laying the foundation for code and sensor expansion rather than on any advanced sensor readings or any advanced sensor functionality. This project uses two different temperature sensors of the cheaper kind. The sensors have an accuracy spread of ±2°C which is quite large but by using 2 different sensors perhaps a better reading could perhaps be obtained by using the mean value. For future projects it might be a better idea to use better sensors and receive accurate readings.
 
-The focus of this project has mainly been on the software side instead of the hardware side. I focused more on laying the foundation for code expansion rather than on any advanced sensor readings. This project uses two different temperature sensors. Both sensors are of the cheaper kind and have an accuracy spread of ±2°C which is quite large but by using 2 different sensors perhaps a better reading could perhaps be obtained by using the mean value. For future project it might be a better idea to use better sensors and receive accurate readings.
+The microcontroller uses WIFI which is usually used for projects with larger bandwidth. This was used for simplicity but is unnecessary since the readings from the microcontroller are small in size and do not require constant uptime. The data readings are currently of unnecessarily high resulation with a 10 second delay. A longer delay will be used when saving data in the future.
 
-The code for the telegram chat bot uses simple HTTP request to fetch/request data. This is not a scalable solution for larger projects but will work fine for personal use. 
-Some improvements that can be made: use as little code as possible on the microcontrollers. The controllers should preferrably use as little computational power as possible and the logic for calculation should be done on another service. This gives us the option to improve the functionality of the bot service as well as decrease the power consumption of the microcontroller. The current implementation does not have the possibility to run without a USB cable which is a big limitation.
+The code for the telegram chat bot uses simple HTTP request to fetch/request data. This is not a scalable solution for larger projects but will work fine for personal use. It is also a bad idea to run the logic for the telegram bot directly on the microcontroller for several reasons: 
 
-When the code for the chat bot is moved to another service another, more energy efficient, protocol will be used.
+1. A bot service should have constant uptime and low response delay which requires more power. This limits the use of more energy efficient solutions.
+2. The controller should use as little computational power as possible if it is to be used without a USB cable connection
+3. It is possible to do more advanced calculations on the data.
 
+All in all this project has served as a great introduction to the world of IoT and its use cases. It has also served as a great learning experience to the limitations of using microcontrollers and what has to be taken into consideration, such as power usage, transfer protocols, tech stacks etc, when implementing a project of this kind.
