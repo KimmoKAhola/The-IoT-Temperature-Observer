@@ -1,4 +1,4 @@
-# The IoT Temperature Observer 
+# The IoT Temperature and Humidity Observer 
 Author: Kimmo Ahola (ka223pd)
 
 # Table of Contents
@@ -24,9 +24,9 @@ Author: Kimmo Ahola (ka223pd)
 
 [Github Repository](https://github.com/KimmoKAhola/The-IoT-Temperature-Observer)
 
-This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402). The purpose of this project has been to create a simple sensor endpoint that I can place somewhere and collect data which is saved to a database. Users can interact with this controller by using a telegram bot and writing certain commands to it.
+This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402). The purpose of this project has been to create a simple sensor endpoint that I can place somewhere and collect data which is then saved to a database. Users can interact with this controller by using a telegram bot and receive live data from it.
 
-The future goals of this project is to expand on this idea and to implement more sensors in different part of the country and build a larger sensor network for personal use.
+The future goals of this project is to expand on this idea and to implement more sensors in different parts of the country and build a larger sensor network for personal use.
 
 Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on python and raspberry pi pico wh. Links to the tools used for the .NET code will be provided and simple python code snippets on how to send data to these services will also be shown. The .NET code is available in the github repository but will not be covered in detail.
 
@@ -63,31 +63,35 @@ To connect your raspberry pi pico wh to your computer and upload code to it the 
 If VS Code is used the Pymakr plugin has to be installed as well.
 [Pymakr](https://docs.pycom.io/gettingstarted/software/vscode/)
 
-Firmware for micropython can be found here. Put this on your microcontroller by pressing the BOOTSEL button while connecting the controller to a computer.
-[MicroPython Firmware](https://micropython.org/download/)
-
 ### How to upload code to the microcontroller
 
-## VS Code instructions
+1. Press and hold the BOOTSEL button on the microcontroller
+2. Connect the controller to a computer with a USB cable.
+3. Load the controller with the latest micropython firmware. [Link to MicroPython firmware](https://micropython.org/download/)
+
+## Upload code to the microcontroller with VS Code
 
 1. Install the pymakr extension
+   
 <p align="center">
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/pymakr-install.png">
 </p>
 
 2. Connect to your plugged in device
+   
 <p align="center">
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/vscode-connect.png">
 </p>
 
 3. Select the .py file you wish to upload
+   
 <p align="center">
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/vscode-connect-2.png">
 </p>
 
 ## How to setup your telegram bot
 
-To get your own telegram bot you will need a telegram account. Click on this link and follow the instructions to create your own bot: https://telegram.me/BotFather.
+To get your own telegram bot you will need a telegram account. Click on the link and follow the instructions to create your own bot: https://telegram.me/BotFather.
 
 The procedure will look something like this:
 <p align="center">
@@ -101,7 +105,7 @@ The procedure will look something like this:
 
 ## Tools needed to implement the .NET API
 
-If you want to implement the .net code in the repository I recommend using the Jetbrains Rider IDE or Visual Studio Community edition. 
+If you want to implement the .net code from the github repository I recommend using the Jetbrains Rider IDE or Visual Studio Community edition. 
      
 | IDE | Free? |
 | :---| :--- |
@@ -112,14 +116,10 @@ If you want to implement the .net code in the repository I recommend using the J
 Entity Framework Core has been used as the ORM of choice and SQL Server is the selected database provider. You will need to install the relevant nuget packages.
 
 # Circuit Diagram
-
-- [x] Circuit diagram (can be hand drawn)
       
 <p align="center">
    <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/circuit-diagram.png">
 </p>
-
-This project uses two different temperature sensors. Both sensors are of the cheaper kind and have an accuracy spread of ±2°C which is quite large but by using 2 different sensors perhaps a better reading could perhaps be obtained by using the mean value.
 
 # Code snippets
 Below are shortened code snippets to give an example of how the microcontroller can be used to read messages from a telegram chat bot and send data to the ubidots api. To view the full code, please check the python files in the repository.
@@ -291,14 +291,6 @@ HTTP requests are used to transfer data to the different services for data visua
 
 # Data Visualization/presentation
 
-- [x] Provide visual examples on how the dashboard looks. Pictures needed.
-- [x] How often is data saved in the database.
-- [x] *Explain your choice of database.
-- [x] *Automation/triggers of the data.
-- [x] *Explain and elaborate what made you choose this platform
-- [ ] Describe platform in terms of functionality
-- [ ] Future plans for visualization
-
 ## Ubidots Dashboard
 [Link to the public Ubidots dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
 
@@ -309,7 +301,7 @@ This platform has a free license for students and saves the data for up to 1 mon
 
 ## Azure SQL server
 [Azure](https://azure.microsoft.com/sv-se)
-To save my data permanently I have chosen to use a database on Azure services. This service has been chosen for several reasons: It is heavily integrated with my favorite tech stach at the moment (.NET), it has a 12 month free plan for students and is reasonably cheap to use when it is not free. The purpose of permanently saving the data is to ......
+To save my data permanently I have chosen to use a database on Azure services. This service has been chosen for several reasons: It is heavily integrated with my favorite tech stach at the moment (.NET), it has a 12 month free plan for students and is reasonably cheap to use when it is not free. The purpose of permanently saving the data is to be able to use any kind of visualization library in the future to view historical data without any time limit.
 
 # Try it!
 You have read through all of this text. Wouldn't it be fun to see the result?
@@ -337,7 +329,8 @@ A better picture will be added for the final draft.
 
 ## Write something about results and how I focused more on the software part of this project.
 
-The focus of this project has mainly been on the software side instead of the hardware side. I focused more on laying the foundation for code expansion rather than on any advanced sensor readings. 
+The focus of this project has mainly been on the software side instead of the hardware side. I focused more on laying the foundation for code expansion rather than on any advanced sensor readings. This project uses two different temperature sensors. Both sensors are of the cheaper kind and have an accuracy spread of ±2°C which is quite large but by using 2 different sensors perhaps a better reading could perhaps be obtained by using the mean value. For future project it might be a better idea to use better sensors and receive accurate readings.
 
 The code for the telegram chat bot uses simple HTTP request to fetch/request data. This is not a scalable solution for larger projects but will work fine for personal use. 
 Some improvements that can be made: use as little code as possible on the microcontrollers. The controllers should preferrably use as little computational power as possible and the logic for calculation should be done on another service. This gives us the option to improve the functionality of the bot service as well as decrease the power consumption of the microcontroller. The current implementation does not have the possibility to run without a USB cable which is a big limitation.
+
