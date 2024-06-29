@@ -22,15 +22,17 @@ Author: Kimmo Ahola (ka223pd)
 
 # Introduction
 
-[Github Repository](https://github.com/KimmoKAhola/The-IoT-Temperature-Observer)
+This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402). 
 
-This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402). The purpose of this project has been to create a simple sensor endpoint that I can place somewhere and collect data which is then saved to a database. Users can interact with this controller by using a telegram bot and receive live data from it.
+[Link to Github repository](https://github.com/KimmoKAhola/The-IoT-Temperature-Observer)
+
+The purpose of this project has been to create a simple sensor endpoint that I can place somewhere and collect data which is then saved to a database. Users can interact with this controller by using a telegram bot and receive live data from it.
 
 The future goals of this project is to expand on this idea and to implement more sensors in different parts of the country and build a larger sensor network for personal use.
 
 Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on python and raspberry pi pico wh. Links to the tools used for the .NET code will be provided and simple python code snippets on how to send data to these services will also be shown. The .NET code is available in the github repository but will not be covered in detail.
 
-For the sake of simplicity the telegram bot will use HTTP requests to fetch/send data.
+For the sake of simplicity the telegram bot will use HTTP requests to fetch/send data and the bot will be run on the microcontroller.
 
 Time required to implement this project yourself: 6-10 hours depending on experience.
 
@@ -285,9 +287,7 @@ while True:
 
 The main loop in the code has a 10 second delay. Since the code is written synchronously it means that due to all the delays of calling the different API:s this delay turns out to be closer to 20-25 seconds. This is gives a good balance between datapoints from the sensors and response speed in the chat. It is possible to write the code asynchronously and solve this issue of code blocking, but since I plan on moving the bot away from the microcontroller to a dedicated server in the future it is unnecessary to rewrite the code right now.
 
-Currently WIFI is used as the wireless protocol for simplicity. As the code for the chat bot is run on the board itself constant uptime is preferred to have good response speed. When the code for the chat bot is moved to another service another, more energy efficient, protocol will be used.
-
-HTTP requests are used to transfer data to the different services for data visualization.
+WIFI is used as the wireless protocol for simplicity. As the code for the chat bot is run on the board itself constant uptime is preferred to have good response speed. HTTP requests are used to transfer data to the different services for data visualization.
 
 # Data Visualization/presentation
 
@@ -295,13 +295,13 @@ HTTP requests are used to transfer data to the different services for data visua
 [Link to the public Ubidots dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
 
 Dashboard: ![myimage-alt-tag](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/ubidots-temp-dashboard-picture.png)
-For visualization of the project the ubidots service has been used. The reason for choosing this project was mainly because of its ease of use. Within a few minutes and a few lines of code the project had a working dashboard that can be viewed by the public. It is also possible to implement triggers on the dashboard that are disconnected from the code on the microcontroller which is an added bonus. The data is sent to Ubidots roughly 2-3 times per minute.
+For visualization of the project the ubidots service has been used. The reason for choosing this service was mainly because of its ease of use. Within a few minutes and a few lines of code the project had a working dashboard that can be viewed by the public. It is also possible to implement triggers on the dashboard that are disconnected from the code on the microcontroller which is an added bonus. The data is sent to Ubidots roughly 2-3 times per minute and it is also possible to implement calculations on the data live on the dashboard.
 
-This platform has a free license for students and saves the data for up to 1 month with a limitation on the number of datapoints per day/month. As this project was meant to be a proof of concept for a future project this solution worked perfectly fine for my goals.
+This platform has a free license for students and saves the data for up to 1 month with a limitation on the number of datapoints per day/month. As this project was meant to be a proof of concept for a future project this solution worked perfectly fine for visualization.
 
 ## Azure SQL server
 [Azure](https://azure.microsoft.com/sv-se)
-To save my data permanently I have chosen to use a database on Azure services. This service has been chosen for several reasons: It is heavily integrated with my favorite tech stach at the moment (.NET), it has a 12 month free plan for students and is reasonably cheap to use when it is not free. The purpose of permanently saving the data is to be able to use any kind of visualization library in the future to view historical data without any time limit.
+To save my data permanently I have chosen to use a database on Azure services. This service has been chosen for several reasons: it is heavily integrated with my favorite tech stach at the moment (.NET), it has a 12 month free plan for students and is reasonably cheap to use when it is not free. The purpose of permanently saving the data is to be able to use any kind of visualization library in the future to view historical data without any time limit. It is also possible to save readings from different sensors in a database with ease when using relational databases.
 
 # Try it!
 You have read through all of this text. Wouldn't it be fun to see the result?
@@ -333,4 +333,6 @@ The focus of this project has mainly been on the software side instead of the ha
 
 The code for the telegram chat bot uses simple HTTP request to fetch/request data. This is not a scalable solution for larger projects but will work fine for personal use. 
 Some improvements that can be made: use as little code as possible on the microcontrollers. The controllers should preferrably use as little computational power as possible and the logic for calculation should be done on another service. This gives us the option to improve the functionality of the bot service as well as decrease the power consumption of the microcontroller. The current implementation does not have the possibility to run without a USB cable which is a big limitation.
+
+When the code for the chat bot is moved to another service another, more energy efficient, protocol will be used.
 
