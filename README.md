@@ -28,9 +28,9 @@ This repository serves as the code base for an IoT project for the summer course
 
 The future goals of this project is to expand on this idea and to implement more sensors in different part of the country and build a larger sensor network for personal use.
 
-Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on those parts. Links to tools used for the .NET code will be provided and simple python snippets on how to send data to these services will also be shown. The .NET code is available in the github repository but will not be covered at all.
+Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on python and raspberry pi pico wh. Links to the tools used for the .NET code will be provided and simple python code snippets on how to send data to these services will also be shown. The .NET code is available in the github repository but will not be covered in detail.
 
-The telegram bot code will be kept beginner friendly and utilize HTTP requests to fetch/send data.
+For the sake of simplicity the telegram bot will use HTTP requests to fetch/send data.
 
 Time required to implement this project yourself: 6-10 hours depending on experience.
 
@@ -340,3 +340,4 @@ A better picture will be added for the final draft.
 The focus of this project has mainly been on the software side instead of the hardware side. I focused more on laying the foundation for code expansion rather than on any advanced sensor readings. 
 
 The code for the telegram chat bot uses simple HTTP request to fetch/request data. This is not a scalable solution for larger projects but will work fine for personal use. 
+Some improvements that can be made: use as little code as possible on the microcontrollers. The controllers should preferrably use as little computational power as possible and the logic for calculation should be done on another service. This gives us the option to improve the functionality of the bot service as well as decrease the power consumption of the microcontroller. The current implementation does not have the possibility to run without a USB cable which is a big limitation.
