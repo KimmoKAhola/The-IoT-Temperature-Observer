@@ -1,8 +1,3 @@
-# TODO
-- [x] Implement circuit diagram
-- [ ] Good pictures of the project
-- [ ] Better looking dashboard
-
 # The IoT Temperature Observer 
 Author: Kimmo Ahola (ka223pd)
 
@@ -25,36 +20,24 @@ Author: Kimmo Ahola (ka223pd)
 9. [Try it!](#try-it)
 10. [Final thoughts](#final-thoughts)
 
-- [x] Title
-- [x] Your name and student credentials (ka223pd)
-- [ ] Short project overview
-- [x] How much time it might take to do (approximation)
-
 # Introduction
 
 [Github Repository](https://github.com/KimmoKAhola/The-IoT-Temperature-Observer)
 
-This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402).
-The purpose of this project has been to create a simple endpoint that I can place somewhere and have it collect data. Users can interact with this controller by using a telegram bot and writing certain commands to it.
+This repository serves as the code base for an IoT project for the summer course 24ST - 1DT305 at [LNU](https://lnu-ftk.instructure.com/courses/402). The purpose of this project has been to create a simple sensor endpoint that I can place somewhere and collect data which is saved to a database. Users can interact with this controller by using a telegram bot and writing certain commands to it.
 
-The future goals of this project is to build my own database and api services by combining the microcontrollers with .net APIs (I study to become a .NET Developer) and as such this codebase contains free to use code for .NET services as well. This will later be used to implement my own smart home (I hope).
+The future goals of this project is to expand on this idea and to implement more sensors in different part of the country and build a larger sensor network for personal use.
 
-Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on those parts. Links to tools used for the .NET code will be provided and simple python snippets on how to send data to these services will also be shown. The C# code is available in the repo but will not be covered at all.
+Since this course is a beginner course aimed to teach microcontrollers/IoT and python the focus of this report will be on those parts. Links to tools used for the .NET code will be provided and simple python snippets on how to send data to these services will also be shown. The .NET code is available in the github repository but will not be covered at all.
 
-The telegram bot code will also be kept beginner friendly and utilize HTTP requests to fetch/send data. This is not a scalable solution but will work fine for personal use.
+The telegram bot code will be kept beginner friendly and utilize HTTP requests to fetch/send data.
 
-Time required to implement this project yourself: 6-10 hours depending on experience (for the python part).
+Time required to implement this project yourself: 6-10 hours depending on experience.
 
 # Objective
-
-- [x] Why you chose the project
-- [x] What purpose does it serve
 - [ ] What insights you think it will give
 
 I chose this project to lay the foundation to a larger personal project, sort of a proof of concept. The idea behind it is to give me a deepened understanding for microcontrollers, python and coding in general.
-I want to give friends & family small sensors to use at home to measure something and collect the data in a personal database and use that info for some visualization/calculation.
-
-Insights: ? Think about this.
 
 # Materials needed
       
@@ -135,6 +118,8 @@ Entity Framework Core has been used as the ORM of choice and SQL Server is the s
 <p align="center">
    <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/circuit-diagram.png">
 </p>
+
+This project uses two different temperature sensors. Both sensors are of the cheaper kind and have an accuracy spread of ±2°C which is quite large but by using 2 different sensors perhaps a better reading could perhaps be obtained by using the mean value.
 
 # Code snippets
 Below are shortened code snippets to give an example of how the microcontroller can be used to read messages from a telegram chat bot and send data to the ubidots api. To view the full code, please check the python files in the repository.
@@ -298,14 +283,11 @@ while True:
 
 # Connectivity
 
-- [x] Which wireless protocols did you use (WiFi, LoRa, etc …)?
-- [x] How often is the data sent?
-
 The main loop in the code has a 10 second delay. Since the code is written synchronously it means that due to all the delays of calling the different API:s this delay turns out to be closer to 20-25 seconds. This is gives a good balance between datapoints from the sensors and response speed in the chat. It is possible to write the code asynchronously and solve this issue of code blocking, but since I plan on moving the bot away from the microcontroller to a dedicated server in the future it is unnecessary to rewrite the code right now.
 
 Currently WIFI is used as the wireless protocol for simplicity. As the code for the chat bot is run on the board itself constant uptime is preferred to have good response speed. When the code for the chat bot is moved to another service another, more energy efficient, protocol will be used.
 
-HTTP requests are used to transfer data. JSON, post, get, patch etc
+HTTP requests are used to transfer data to the different services for data visualization.
 
 # Data Visualization/presentation
 
@@ -321,9 +303,9 @@ HTTP requests are used to transfer data. JSON, post, get, patch etc
 [Link to the public Ubidots dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
 
 Dashboard: ![myimage-alt-tag](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/ubidots-temp-dashboard-picture.png)
-For visualization of the project the ubidots service has been used. The reason for choosing this project was mainly because of its ease of use. Within a few minutes and a few lines of code the project had a working dashboard that can be viewed by the public. This platform has a free license for students and saves the data for up to 1 month with a limitation on the number of datapoints per day/month. As this project was meant to be a proof of concept for a future project this solution worked perfectly fine for my goals.
+For visualization of the project the ubidots service has been used. The reason for choosing this project was mainly because of its ease of use. Within a few minutes and a few lines of code the project had a working dashboard that can be viewed by the public. It is also possible to implement triggers on the dashboard that are disconnected from the code on the microcontroller which is an added bonus. The data is sent to Ubidots roughly 2-3 times per minute.
 
-The data is sent to Ubidots roughly 2-3 times per minute.
+This platform has a free license for students and saves the data for up to 1 month with a limitation on the number of datapoints per day/month. As this project was meant to be a proof of concept for a future project this solution worked perfectly fine for my goals.
 
 ## Azure SQL server
 [Azure](https://azure.microsoft.com/sv-se)
@@ -333,7 +315,7 @@ To save my data permanently I have chosen to use a database on Azure services. T
 You have read through all of this text. Wouldn't it be fun to see the result?
 
 ## Telegram chat bot
-Interact with it if you want to and have a telegram account. If the microcontroller is live you will receive a response within 20 seconds.
+Interact with it if you want to and have a telegram account. If the microcontroller is live you will receive a response within 20 seconds, if the controller is disconnected the message will be sent when the controller goes live the next time.
 
 https://t.me/PlantObserverBot
 
@@ -353,5 +335,8 @@ You can also view this to get the JSON data directly [JSON](https://plantobserve
 ![temp pic](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/temp-project-picture.jpg)
 A better picture will be added for the final draft.
 
-
 ## Write something about results and how I focused more on the software part of this project.
+
+The focus of this project has mainly been on the software side instead of the hardware side. I focused more on laying the foundation for code expansion rather than on any advanced sensor readings. 
+
+The code for the telegram chat bot uses simple HTTP request to fetch/request data. This is not a scalable solution for larger projects but will work fine for personal use. 
