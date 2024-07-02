@@ -217,7 +217,7 @@ while True:
     save.send_to_api(token=token, temperature=value, dht_temperature=dht_val_1, dht_humidity=dht_val_2, sensor_id=SENSOR_ID)
     save.sendData(DEVICE_LABEL, VARIABLE_LABEL, value)
     save.sendData(DEVICE_LABEL, "dht_temp", dht_val_1)
-    save.sendData(DEVICE_LABEL, "dht_humidity", dht_val_2)
+    #save.sendData(DEVICE_LABEL, "dht_humidity", dht_val_2)
     try:
         updates = get_telegram_updates(offset=last_update_id)
         if updates:
