@@ -108,7 +108,7 @@ If you want to implement the .net code from the github repository I recommend us
 | :---| :--- |
 | [Rider](https://www.jetbrains.com/rider/) | Paid product or free educational license |
 | [Visual Studio Community edition](https://visualstudio.microsoft.com/vs/community/) | Yes |
-| [VS Code C# instructions](https://code.visualstudio.com/docs/languages/csharp) | Yes, but I do not recommend VS Code for this purpose. |
+| [VS Code C# instructions](https://code.visualstudio.com/docs/languages/csharp) | Yes, but I do not recommend VS Code for this purpose as it lacks functionality and is harder to setup. |
 
 Entity Framework Core has been used as the ORM of choice and SQL Server is the selected database provider. You will need to install the relevant nuget packages.
 
