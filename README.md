@@ -58,14 +58,13 @@ To connect your raspberry pi pico wh to your computer and upload code to it the 
 | [VS Code](https://code.visualstudio.com/) | Used in this project. It is very extensible but can be overwhelming for a beginner. |
 | [Thonny](https://thonny.org/) | Very beginner friendly and lightweight. Lacks a lot of features that VS Code has. |
 
-If VS Code is used the Pymakr plugin has to be installed as well.
-[Pymakr](https://docs.pycom.io/gettingstarted/software/vscode/)
+If VS Code is used the [Pymakr plugin](https://docs.pycom.io/gettingstarted/software/vscode/) has to be installed as well. This can also be installed in the VS Code editor.
 
 ### How to upload code to the microcontroller
 
 1. Press and hold the BOOTSEL button on the microcontroller
 2. Connect the controller to a computer with a USB cable.
-3. Load the controller with the latest micropython firmware. [Link to MicroPython firmware](https://micropython.org/download/)
+3. Load the controller with [the latest micropython firmware](https://micropython.org/download/). 
 
 ## Upload code to the microcontroller with VS Code
 
@@ -119,6 +118,10 @@ Entity Framework Core has been used as the ORM of choice and SQL Server is the s
    <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/circuit-diagram.png">
 </p>
 
+Make sure that the Pico is not connected to power when connecting the electronics. Always double check the connections before connecting a power source.
+
+The black wire is connected to one of the ground pins on the Pico WH. The red wire is connected to the 3V3(OUT) pin and the blue wires are connected to two of the General Purpose IO pins. None of the sensors used in this project require any extra resistors but you should always reference the datasheet of the product before connecting anything.
+ 
 # Code snippets
 Below are shortened code snippets to give an example of how the microcontroller can be used to read messages from a telegram chat bot and send data to the ubidots api. To view the full code, please check the python files in the repository.
 Click on the collapsed sections to view the code.
@@ -296,27 +299,27 @@ For visualization of the project the ubidots service has been used. The reason f
 This platform has a free license for students and saves the data for up to 1 month with a limitation on the number of datapoints per day/month. As this project was meant to be a proof of concept for a future project this solution worked perfectly fine for visualization.
 
 ## Azure SQL server
-[Azure](https://azure.microsoft.com/sv-se)
-To save my data permanently I have chosen to use a database on Azure services. This service has been chosen for several reasons: it is heavily integrated with my favorite tech stach at the moment (.NET), it has a 12 month free plan for students and is reasonably cheap to use when it is not free. The purpose of permanently saving the data is to be able to use any kind of visualization library in the future to view historical data without any time limit. It is also possible to save readings from different sensors in a database with ease when using relational databases.
+
+To save my data permanently I have chosen to use a database on [Azure Services](https://azure.microsoft.com/sv-se). This service has been chosen for several reasons: it is heavily integrated with my favorite tech stach at the moment (.NET), it has a 12 month free plan for students and is reasonably cheap to use when it is not free. The purpose of permanently saving the data is to be able to use any kind of visualization library in the future to view historical data without any time limit. It is also possible to save readings from different sensors in a database with ease when using relational databases.
 
 # Try it!
 You have read through all of this text. Wouldn't it be fun to see the result?
 
 ## Telegram chat bot
-Interact with it if you want to and have a telegram account. If the microcontroller is live you will receive a response within 20 seconds, if the controller is disconnected the message will be sent when the controller goes live the next time.
+Interact with the [chat bot here](https://t.me/PlantObserverBot) if you want to and have a telegram account. If the microcontroller is live you will receive a response within 20 seconds, if the controller is disconnected the message will be sent when the controller goes live the next time.
 
-https://t.me/PlantObserverBot
 
-This is an example of responses your bot might have.
+This is an example of responses that your bot might have.
 <p align="center">
       <img src="https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/telegram-example-response.png">
 </p>
 
 ## Swagger API
-This is an endpoint to fetch my saved sensor data. Use the GUI to click on the topmost option, /PlantData/Temperature, and click on execute to view the data. Note that some of the options are protected.
-[API](https://plantobserverapi.azurewebsites.net/swagger/index.html)
+[Link to the swagger API](https://plantobserverapi.azurewebsites.net/swagger/index.html). This is an endpoint to fetch my saved sensor data. Use the GUI to click on the topmost option, /PlantData/Temperature, and click on execute to view the data. The date filtering is optional and can be used to fetch data from a certain date.
 
-You can also view this to get the JSON data directly [JSON](https://plantobserverapi.azurewebsites.net/PlantData/Temperature)
+Note that some of the options visible in the GUI are protected.
+
+You can also view this to get the JSON data directly to see how it is structured [JSON endpoint](https://plantobserverapi.azurewebsites.net/PlantData/Temperature)
 
 # Final thoughts
 
