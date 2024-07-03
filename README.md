@@ -58,7 +58,7 @@ To connect your raspberry pi pico wh to your computer and upload code to it the 
 | [VS Code](https://code.visualstudio.com/) | Used in this project. It is very extensible but can be overwhelming for a beginner. |
 | [Thonny](https://thonny.org/) | Very beginner friendly and lightweight. Lacks a lot of features that VS Code has. |
 
-If VS Code is used the [Pymakr plugin](https://docs.pycom.io/gettingstarted/software/vscode/) has to be installed as well. This can also be installed in the VS Code editor.
+If VS Code is used the [Pymakr plugin](https://docs.pycom.io/gettingstarted/software/vscode/) has to be installed as well. This can also be installed in the VS Code editor. The Pymakr plugin also requires Node.js, which can be installed [here](https://nodejs.org/en).
 
 ### How to upload code to the microcontroller
 
