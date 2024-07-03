@@ -229,9 +229,8 @@ def process_telegram_messages(updates):
         # Here you can handle all the commands you wish to use.
         # The command /temperature is used to send reading back to a the user.
         if text.startswith('/temperature'):
-
-        value = temp_sensor.read_temperature()
-        send_message(chat_id, f"{value}")
+           value = temp_sensor.read_temperature()
+           send_message(chat_id, f"Temp is: {value}")
 
 # function to send back a message to a user
 def send_message(chat_id, text):
@@ -294,7 +293,7 @@ WIFI is used as the wireless protocol for simplicity and HTTP requests are used 
 [Link to the public Ubidots dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
 
 Dashboard: ![myimage-alt-tag](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/ubidots-temp-dashboard-picture.png)
-_If the dashboard is not live it might look something like this._
+_If the dashboard is live it might look something like this._
 
 For visualization of the project the ubidots service has been used. The reason for choosing this service was mainly because of its ease of use. Within a few minutes and a few lines of code the project had a working dashboard that can be viewed by the public. It is also possible to implement triggers on the dashboard that are disconnected from the code on the microcontroller which is an added bonus. The data is sent to Ubidots roughly 2-3 times per minute and it is also possible to implement calculations on the data live on the dashboard.
 
