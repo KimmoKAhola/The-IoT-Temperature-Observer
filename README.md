@@ -294,6 +294,8 @@ WIFI is used as the wireless protocol for simplicity and HTTP requests are used 
 [Link to the public Ubidots dashboard](https://stem.ubidots.com/app/dashboards/public/dashboard/QiS5cV6BLo26QOs3kU8ZUUYNLR0JPOHqLFPNH-FtdNE)
 
 Dashboard: ![myimage-alt-tag](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/ubidots-temp-dashboard-picture.png)
+_If the dashboard is not live it might look something like this._
+
 For visualization of the project the ubidots service has been used. The reason for choosing this service was mainly because of its ease of use. Within a few minutes and a few lines of code the project had a working dashboard that can be viewed by the public. It is also possible to implement triggers on the dashboard that are disconnected from the code on the microcontroller which is an added bonus. The data is sent to Ubidots roughly 2-3 times per minute and it is also possible to implement calculations on the data live on the dashboard.
 
 This platform has a free license for students and saves the data for up to 1 month with a limitation on the number of datapoints per day/month. As this project was meant to be a proof of concept for a future project this solution worked perfectly fine for visualization.
