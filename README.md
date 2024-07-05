@@ -324,7 +324,7 @@ You can also view this to get the JSON data directly to see how it is structured
 
 # Final thoughts
 
-![temp pic](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/temp-project-picture.jpg)
+![project picture](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/temp-project-picture.jpg)
 _The finished project measuring three different values._
 
 The focus of this project has mainly been on the software side instead of the hardware side. I focused more on laying the foundation for code and sensor expansion rather than on any advanced sensor readings or any advanced sensor functionality. This project uses two different temperature sensors of the cheaper kind. The sensors have an accuracy spread of ±2°C which is quite large but by using 2 different sensors perhaps a better reading could perhaps be obtained by using the mean value. For future projects it might be a better idea to use better sensors and receive accurate readings.
