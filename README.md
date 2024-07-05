@@ -41,12 +41,12 @@ I chose this project to lay the foundation to a larger personal project, sort of
       
 | Product | Quantity | Link  | Description | Price (SEK) |
 | :---         |     ---:       | :--- | :--- | ---: |
-| Raspberry Pi Pico WH   | 1     | [Electrokit](https://www.electrokit.com/raspberry-pi-pico-wh) | The main part of the project. The "brain". | 109 |
-| USB cable A-male - microB-male 1.8m  | 1 | [Electrokit](https://www.electrokit.com/usb-kabel-a-hane-micro-b-5p-hane-1.8m) | Connect the Pico to a computer and power it | 39 |
-| Solderless Breadboard 840 tie-points       | 1       | [Electrokit](https://www.electrokit.com/kopplingsdack-840-anslutningar) | A board to connect sensors and the microcontroller |69 |
-| Jumper wires 20-pin 30cm male/male   | 1 | [Electrokit](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) | Connect the sensors to the controller | 29 |
-| Digital temperature and humidity sensor DHT11 | 1 | [Electrokit](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) |  Measure temperature and humidity (Accuracy: ±2℃, ±5％RH) |49 |
-| MCP9700 TO-92 Temperaturgivare | 1 | [Electrokit](https://www.electrokit.com/mcp9700-to-92-temperaturgivare) | Measure temperature (Accuracy: ±2°C) | 12 |
+| Raspberry Pi Pico WH   | 1     | [Electrokit](https://www.electrokit.com/raspberry-pi-pico-wh) | The main part of the project. Here all code and logic will be placed. | 109 |
+| USB cable A-male - microB-male 1.8m  | 1 | [Electrokit](https://www.electrokit.com/usb-kabel-a-hane-micro-b-5p-hane-1.8m) | Needed to transfer code to the Pico and power it | 39 |
+| Solderless Breadboard 840 tie-points       | 1       | [Electrokit](https://www.electrokit.com/kopplingsdack-840-anslutningar) | A board used to connect sensors to the Pico |69 |
+| Jumper wires 20-pin 30cm male/male   | 1 | [Electrokit](https://www.electrokit.com/labbsladd-20-pin-15cm-hane/hane) | Wires to connect the electronics. | 29 |
+| Digital temperature and humidity sensor DHT11 | 1 | [Electrokit](https://www.electrokit.com/digital-temperatur-och-fuktsensor-dht11) |  Sensor. Measure temperature and humidity (Accuracy: ±2℃, ±5％RH) |49 |
+| MCP9700 TO-92 Temperaturgivare | 1 | [Electrokit](https://www.electrokit.com/mcp9700-to-92-temperaturgivare) | Sensor. Measure temperature (Accuracy: ±2°C) | 12 |
 | Total price | | | | 307|
 
 # Setup
@@ -325,7 +325,7 @@ You can also view this to get the JSON data directly to see how it is structured
 # Final thoughts
 
 ![temp pic](https://kimmoprojectstorage.blob.core.windows.net/lnu-tutorial/temp-project-picture.jpg)
-_A better picture of the sensor setup will be added for the final draft._
+_The finished project measuring three different values._
 
 The focus of this project has mainly been on the software side instead of the hardware side. I focused more on laying the foundation for code and sensor expansion rather than on any advanced sensor readings or any advanced sensor functionality. This project uses two different temperature sensors of the cheaper kind. The sensors have an accuracy spread of ±2°C which is quite large but by using 2 different sensors perhaps a better reading could perhaps be obtained by using the mean value. For future projects it might be a better idea to use better sensors and receive accurate readings.
 
